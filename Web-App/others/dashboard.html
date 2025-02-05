@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Orb Connect</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <nav>
+        <ul>
+            <li><a href="/dashboard">Dashboard</a></li>
+            <li><a href="/billing">Billing</a></li>
+            <li><a href="/help">Help & Support</a></li>
+            <li><a href="/logout">Logout</a></li>
+        </ul>
+    </nav>
+
+    <div class="container">
+        <h1>Welcome, {{ username }}!</h1> <!-- Dynamic username from FastAPI -->
+
+        <section class="dashboard-section">
+            <h2>Connection Status</h2>
+            <p>Status: <strong id="connection-status">{{ connection_status }}</strong></p> <!-- Dynamic status from FastAPI -->
+            <p>Connection Strength: <span id="connection-strength">{{ connection_strength }}</span></p> <!-- Dynamic strength from FastAPI -->
+            <p>Usage: <span id="usage">{{ usage }}</span> MB / {{ plan_limit }} MB</p> <!-- Dynamic usage and plan limit from FastAPI -->
+        </section>
+
+        <section class="dashboard-section">
+            <h2>Current Plan</h2>
+            <p>Plan Name: {{ current_plan_name }}</p> <!-- Dynamic plan name from FastAPI -->
+            <p>Data Limit: {{ current_plan_limit }} MB</p> <!-- Dynamic plan limit from FastAPI -->
+            <p><a href="/billing">View Billing & Plan Details</a></p>
+        </section>
+
+        <section class="dashboard-section">
+            <h2>Access Point Details</h2>
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>AP Name</th>
+                        <th>Status</th>
+                        <th>Location</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>AP-Home</td>
+                        <td>Online</td>
+                        <td>Home Address</td>
+                    </tr>
+                    <tr>
+                        <td>AP-Office</td>
+                        <td>Offline</td>
+                        <td>Office Address</td>
+                    </tr>
+                    <!-- More rows for APs - FastAPI can dynamically generate these rows -->
+                </tbody>
+            </table>
+        </section>
+    </div>
+</body>
+</html>
