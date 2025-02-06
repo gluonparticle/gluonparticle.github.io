@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Orb Connect</title>
+    <style>
+        /* Color Palette - (Copied from your final setup - styles.css) */
+        :root {
+            --color-bluish-1: #3165A4;
+            --color-bluish-2: #2B5D98;
+            --color-bluish-3: #3872B3;
+            --color-bluish-4: #437DBF;
+            --color-greyish-1: #F5F5F5;
+            --color-greyish-2: #838383;
+            --color-greyish-3: #585858;
+            --color-error-red: rgb(232, 17, 35);
+            --color-light-gray: #ddd;
+        }
+
+        body {
+            font-family: sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: var(--color-greyish-1);
+            color: var(--color-greyish-3);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .big-box-container {
+            max-width: 90%;
+            width: 450px;
+            background-color: white;
+            display: flex;
+            flex-direction: column;
+            align-items: stretch;
+            padding: 0;
+            border: 1px solid var(--color-greyish-2);
+            border-radius: 0;
+            overflow: hidden;
+            margin: 10px;
+        }
+
+        .logo-box {
+            padding: 15px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: white;
+            border-bottom: 1px solid var(--color-greyish-2);
+            border-radius: 0;
+            margin-bottom: 0;
+        }
+
+        .form-and-text-box {
+            padding: 30px;
+            background-color: white;
+            border-radius: 0;
+        }
+
+        .login-logo {
+            display: block;
+            max-width: 100%;
+            height: auto;
+            margin-bottom: 0;
+            transform: scale(0.7);
+        }
+
+        .logo-container {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+        }
+
+        .login-form-box { /* Reusing login-form-box styles for dashboard content */
+            width: 100%;
+            text-align: left; /* Changed to left align for dashboard content */
+        }
+
+        .dashboard-section {
+            margin-bottom: 10px;
+            padding: 15px;
+            border: 1px solid var(--color-greyish-2);
+            border-radius: 4px;
+        }
+
+        .dashboard-section h2 {
+            color: var(--color-bluish-2);
+            margin-top: 0;
+        }
+
+        .dashboard-section p {
+            margin-top: 5px;
+            margin-bottom: px;
+        }
+    </style>
+</head>
+<body>
+    <div class="big-box-container">
+        <div class="logo-box">
+            <div class="logo-container">
+                <img src="logo.png" alt="Orb Connect Logo" class="login-logo">
+            </div>
+        </div>
+
+        <div class="form-and-text-box">
+            <div class="login-form-box">
+                <h1>Welcome to your Dashboard!</h1>
+
+                <section class="dashboard-section">
+                    <h2>Account Overview</h2>
+                    <p><strong>Username:</strong> user123</p>
+                    <p><strong>Email:</strong> user@example.com</p>
+                    <p><strong>Plan:</strong> Premium</p>
+                </section>
+
+                <section class="dashboard-section">
+                    <h2>Connection Status</h2>
+                    <p><strong>Status:</strong> Connected</p>
+                    <p><strong>Data Usage:</strong> 50GB / 100GB</p>
+                </section>
+
+                <section class="dashboard-section">
+                    <h2>Quick Actions</h2>
+                    <ul>
+                        <li><a href="#">View Billing</a></li>
+                        <li><a href="#">Manage Profile</a></li>
+                        <li><a href="#">Support</a></li>
+                    </ul>
+                </section>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

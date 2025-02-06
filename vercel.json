@@ -1,9 +1,0 @@
-{
-  "builds": [],
-  "routes": [
-    {
-      "src": "/.*",
-      "dest": "/login.html"
-    }
-  ]
-}

@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login - Orb Connect</title>
+    <title>Register - Orb Connect</title>
     <style>
-        /* Color Palette */
+        /* Color Palette - (Copied from your final setup - styles.css) */
         :root {
             --color-bluish-1: #3165A4;
             --color-bluish-2: #2B5D98;
@@ -27,12 +27,12 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            min-height: 0vh;
+            min-height: 100vh;
         }
 
         .big-box-container {
-            max-width: 450px;
-            width: 100%;
+            max-width: 90%;
+            width: 550px;
             background-color: white;
             display: flex;
             flex-direction: column;
@@ -41,7 +41,7 @@
             border: 1px solid var(--color-greyish-2);
             border-radius: 0;
             overflow: hidden;
-            margin: 20px;
+            margin: 10px;
         }
 
         .logo-box {
@@ -65,6 +65,7 @@
             display: block;
             max-width: 100%;
             height: auto;
+            margin-bottom: 0;
             transform: scale(0.7);
         }
 
@@ -89,7 +90,7 @@
         }
 
         .login-form-box label {
-            margin-top: 20px;
+            margin-top: 7px;
             margin-bottom: 5px;
             font-weight: bold;
             text-align: left;
@@ -168,74 +169,6 @@
             text-align: left;
             display: none;
         }
-
-        .warning {
-            color: var(--color-error-red);
-            font-size: 0.8em;
-            margin-top: 5px;
-            display: none;
-        }
-
-        .warning::before {
-            content: "⚠️ ";
-        }
-
-        @media (max-width: 768px) {
-            .big-box-container {
-                width: 90%;
-                max-width: 500px;
-            }
-
-            .form-and-text-box {
-                padding: 20px 15px;
-            }
-
-            .login-form-box button[type="submit"].login-button,
-            .login-form-box button[type="button"].signup-button {
-                font-size: 0.9em;
-                padding: 9px 15px;
-            }
-
-            .login-form-box input[type="text"],
-            .login-form-box input[type="email"],
-            .login-form-box input[type="password"] {
-                padding: 10px;
-            }
-
-            .login-form-box label {
-                margin-top: 15px;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .big-box-container {
-                width: 95%;
-                max-width: 400px;
-                margin: 10px;
-            }
-
-            .logo-box {
-                padding: 10px;
-            }
-
-            .login-form-box button[type="submit"].login-button,
-            .login-form-box button[type="button"].signup-button {
-                font-size: 0.85em;
-                padding: 8px 15px;
-            }
-
-            .login-form-box .button-container {
-                flex-direction: column;
-            }
-
-            .login-form-box button[type="button"].signup-button {
-                margin-top: 10px;
-            }
-
-            .login-form-box label {
-                margin-top: 10px;
-            }
-        }
     </style>
 </head>
 <body>
@@ -248,20 +181,31 @@
 
         <div class="form-and-text-box">
             <div class="login-form-box">
-                <form action="/login" method="post" id="loginForm">
-                    <label for="username">Username or Email:</label>
-                    <input type="text" id="username" name="username" placeholder="Enter Email or Username">
-                    <div class="warning" id="usernameWarning">Please enter Email or Username</div>
+                <h1>Create Account</h1>
+                <div class="error-message-custom" id="registration-error">Please fill in all required fields correctly.</div>
+                <form action="/register" method="post" id="registrationForm">
+                    <label for="firstName">First Name:</label>
+                    <input type="text" id="firstName" name="firstName" placeholder="Enter First Name" required>
+
+                    <label for="lastName">Last Name:</label>
+                    <input type="text" id="lastName" name="lastName" placeholder="Enter Last Name" required>
+
+                    <label for="email">Email:</label>
+                    <input type="email" id="email" name="email" placeholder="Enter Email" required>
+
+                    <label for="username">Username:</label>
+                    <input type="text" id="username" name="username" placeholder="Enter Username" required>
 
                     <label for="password">Password:</label>
-                    <input type="password" id="password" name="password" placeholder="Enter password">
-                    <div class="warning" id="passwordWarning">Please enter Password</div>
+                    <input type="password" id="password" name="password" placeholder="Enter Password" required>
 
-                    <a href="/password-reset-request" id="forgot-password">Forgot your password?</a>
+                    <label for="confirmPassword">Confirm Password:</label>
+                    <input type="password" id="confirmPassword" name="confirmPassword" placeholder="Confirm Password" required>
+
 
                     <div class="button-container">
-                        <button type="submit" class="login-button">Login</button>
-                        <button type="button" class="signup-button">Sign Up</button>
+                        <button type="submit" class="login-button">Register</button>
+                        <button type="button" class="signup-button">Cancel</button>
                     </div>
                 </form>
             </div>
@@ -269,43 +213,21 @@
     </div>
 
     <script>
-        document.getElementById('loginForm').addEventListener('submit', function(event) {
+        document.getElementById('registrationForm').addEventListener('submit', function(event) {
+            const firstNameInput = document.getElementById('firstName');
+            const lastNameInput = document.getElementById('lastName');
+            const emailInput = document.getElementById('email');
             const usernameInput = document.getElementById('username');
             const passwordInput = document.getElementById('password');
-            const usernameWarning = document.getElementById('usernameWarning');
-            const passwordWarning = document.getElementById('passwordWarning');
+            const confirmPasswordInput = document.getElementById('confirmPassword');
+            const registrationError = document.getElementById('registration-error');
 
-            // Hide all warnings at first
-            usernameWarning.style.display = 'none';
-            passwordWarning.style.display = 'none';
-
-            // Check if username is empty
-            if (!usernameInput.value.trim()) {
+            if (!firstNameInput.value.trim() || !lastNameInput.value.trim() || !emailInput.value.trim() || !usernameInput.value.trim() || !passwordInput.value.trim() || !confirmPasswordInput.value.trim()) {
                 event.preventDefault();
-                usernameWarning.style.display = 'block';
+                registrationError.style.display = 'block';
+            } else {
+                registrationError.style.display = 'none';
             }
-
-            // Check if password is empty
-            if (!passwordInput.value.trim()) {
-                event.preventDefault();
-                passwordWarning.style.display = 'block';
-            }
-
-            // If both are empty
-            if (!usernameInput.value.trim() && !passwordInput.value.trim()) {
-                event.preventDefault();
-                usernameWarning.style.display = 'block';
-                passwordWarning.style.display = 'block';
-            }
-        });
-
-        // Clear warnings when typing
-        document.getElementById('username').addEventListener('input', function() {
-            document.getElementById('usernameWarning').style.display = 'none';
-        });
-
-        document.getElementById('password').addEventListener('input', function() {
-            document.getElementById('passwordWarning').style.display = 'none';
         });
     </script>
 </body>
