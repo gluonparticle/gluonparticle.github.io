@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sign In - Orb Connect</title>
+    <title>Stay Signed In? - Orb Connect</title>
     <style>
         /* Color Palette */
         :root {
@@ -18,9 +18,9 @@
             --color-light-gray: #ddd;
         }
 
-        /* Body uses sans-serif by default */
+        /* Body uses Arial font now */
         body {
-            font-family: sans-serif;
+            font-family: Arial, sans-serif; /* Set Arial as default font for body */
             margin: 0;
             padding: 0;
             background-color: var(--color-greyish-1);
@@ -45,21 +45,23 @@
             margin: 20px;
         }
 
-        .logo-box {
-            padding: 15px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            background-color: white;
-            border-bottom: 1px solid var(--color-greyish-2);
-            border-radius: 0;
-            margin-bottom: 0;
-        }
-
         .form-and-text-box {
             padding: 30px;
             background-color: white;
             border-radius: 0;
+            text-align: center; /* Center text in form-and-text-box */
+        }
+
+        .form-and-text-box p.question {
+            font-size: 2.2em; /* Big font for the question */
+            font-weight: bold; /* Thick letters for the question */
+            margin-bottom: 30px; /* Space below question */
+        }
+
+        .form-and-text-box p.description {
+            font-size: 1.2em; /* Normal font size for description */
+            color: var(--color-greyish-3); /* Greyish color for description */
+            margin-bottom: 15px; /* Space below description */
         }
 
         .login-logo {
@@ -121,64 +123,29 @@
         .login-form-box .button-container {
             display: flex;
             gap: 10px;
-            justify-content: stretch;
-            margin-top: 10px;
+            justify-content: center; /* Center buttons on remember-me page */
+            margin-top: 40px; /* Add margin above buttons */
         }
 
-        /* Placeholder styles for Username input */
-        #username::placeholder {
-            font-family: Arial, Times New Roman, monospace;
-            font-size: 1.05rem;
-            font-weight: 400;
-        }
-        #username::-webkit-input-placeholder {
-            font-family: Times New Roman, Courier;
-            font-size: 1.05rem;
-            font-weight: 400;
-        }
-        #username:-ms-input-placeholder {
-            font-family: Arial, monospace;
-            font-size: 1.05rem;
-            font-weight: 400;
-        }
-
-        /* Placeholder styles for Password input */
-        #password::placeholder {
-            font-family: Arial, Times New Roman, monospace;
-            font-size: 1.05rem;
-            font-weight: 400;
-        }
-        #password::-webkit-input-placeholder {
-            font-family: Times New Roman, Courier;
-            font-size: 1.05rem;
-            font-weight: 400;
-        }
-        #password:-ms-input-placeholder {
-            font-family: 'Courier New', monospace;
-            font-size: 1.05rem;
-            font-weight: 400;
-        }
-
-        /* Override login and signup button fonts to Arial.
-           Currently the buttons inherit the global font ("sans-serif") from the body.
-        */
+        /* Button Styles - Reused from index.html for consistency */
         .login-form-box button[type="submit"].login-button,
-        .login-form-box button[type="button"].signup-button {
+        .login-form-box button[type="button"].signup-button,
+        .login-form-box button[type="button"].remember-button { /* Added .remember-button style */
             font-family: Arial, sans-serif;
             font-weight: 550;
-        
-        }
-
-        .login-form-box button[type="submit"].login-button {
             padding: 10px 20px;
-            background-color: var(--color-bluish-3);
-            color: white;
             border: none;
             border-radius: 4px;
             cursor: pointer;
             font-size: 1.1em;
-            flex-grow: 1;
+            flex-grow: 0; /* Buttons don't need to grow on remember-me page */
             text-align: center;
+            min-width: 100px; /* Ensure buttons have a minimum width */
+        }
+
+        .login-form-box button[type="submit"].login-button {
+            background-color: var(--color-bluish-3);
+            color: white;
         }
 
         .login-form-box button[type="submit"].login-button:hover {
@@ -186,27 +153,35 @@
         }
 
         .login-form-box button[type="button"].signup-button {
-            padding: 13px 20px;
-            background-color: #ffffff;
+            background-color: var(--color-light-gray);
             color: #393194;
-            border: 1px solid #838383;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 1.1em;
-            flex-grow: 1;
-            text-align: center;
+            border: 1px solid #ffffff;
         }
 
         .login-form-box button[type="button"].signup-button:hover {
             background-color: var(--color-bluish-3);
             color: #ffffff;
         }
-        /* Add this rule to your <style> block to adjust the color of "Forgot your password?" */
-        #forgot-password {
-            color: #443ba6; /* Change this hex value to your desired color */
-        }
-        
 
+        /* Styles for Yes/No buttons on remember-me page - using signup-button style as base */
+        .login-form-box button[type="button"].remember-button {
+            background-color: var(--color-light-gray); /* Light gray background */
+            color: #393194;
+            border: 1px solid #838383;
+        }
+
+        .login-form-box button[type="button"].remember-button.yes {
+            background-color: var(--color-bluish-3); /* Blue background for Yes button */
+            color: white;
+            border: none; /* Remove border for Yes button */
+        }
+
+        .login-form-box button[type="button"].remember-button:hover {
+            background-color: var(--color-bluish-3);
+            color: #ffffff;
+        }
+
+        /* Error message styles - unchanged */
         .error-message-custom {
             font-weight: 400;
             font-family: "Segoe UI", -apple-system, "Helvetica Neue", "Lucida Grande", Roboto, Ebrima, "Nirmala UI", Gadugi, "Segoe Xbox Symbol", "Segoe UI Symbol", "Meiryo UI", "Khmer UI", Tunga, "Lao UI", Raavi, "Iskoola Pota", Latha, Leelawadee, "Microsoft YaHei UI", "Microsoft JhengHei UI", "Malgun Gothic", "Estrangelo Edessa", "Microsoft Himalaya", "Microsoft New Tai Lue", "Microsoft PhagsPa", "Microsoft Tai Le", "Microsoft Yi Baiti", "Mongolian Baiti", "MV Boli", "Myanmar Text", "Cambria Math", sans-serif;
@@ -220,6 +195,7 @@
             display: none;
         }
 
+        /* Media queries - unchanged */
         @media (max-width: 768px) {
             .big-box-container {
                 width: 90%;
@@ -229,7 +205,8 @@
                 padding: 20px 15px;
             }
             .login-form-box button[type="submit"].login-button,
-            .login-form-box button[type="button"].signup-button {
+            .login-form-box button[type="button"].signup-button,
+            .login-form-box button[type="button"].remember-button {
                 font-size: 0.9em;
                 padding: 9px 15px;
             }
@@ -249,18 +226,17 @@
                 max-width: 400px;
                 margin: 10px;
             }
-            .logo-box {
-                padding: 10px;
-            }
             .login-form-box button[type="submit"].login-button,
-            .login-form-box button[type="button"].signup-button {
+            .login-form-box button[type="button"].signup-button,
+            .login-form-box button[type="button"].remember-button {
                 font-size: 0.85em;
                 padding: 8px 15px;
             }
             .login-form-box .button-container {
                 flex-direction: column;
             }
-            .login-form-box button[type="button"].signup-button {
+            .login-form-box button[type="button"].signup-button,
+            .login-form-box button[type="button"].remember-button {
                 margin-top: 10px;
             }
             .login-form-box label {
@@ -271,43 +247,16 @@
 </head>
 <body>
     <div class="big-box-container">
-        <div class="logo-box">
-            <div class="logo-container">
-                <img src="assets/logo.png" alt="Orb Connect Logo" class="login-logo">
-            </div>
-        </div>
-
         <div class="form-and-text-box">
             <div class="login-form-box">
-                <div class="error-message-custom" id="username-error">Enter a valid email address, phone number, or Username</div>
-                <form action="/login" method="post" id="loginForm">
-                    <label for="username">Username or Email:</label>
-                    <input type="text" id="username" name="username" placeholder="Enter Email or Username" required>
-
-                    <label for="password">Password:</label>
-                    <input type="password" id="password" name="password" placeholder="Enter password" required>
-                    <a href="/password-reset-request" id="forgot-password">Forgot your password?</a>
-
-                    <div class="button-container">
-                        <button type="submit" class="login-button" onclick="window.location.href='remember-me.html';">Login</button>
-                        <button type="button" class="signup-button" onclick="window.location.href='registration.html';">Sign Up</button>
-                    </div>
-                </form>
+                <p class="question">Stay signed in?</p> <!-- Vertical distance between top of container and "Stay signed in?" is defined by margin-bottom in .question -->
+                <p class="description">Check this option to reduce the number of times you are asked to sign in.</p> <!-- Vertical distance between description and Yes/No buttons is defined by margin-bottom in .description -->
+                <div class="button-container"></div>
+                    <button type="button" class="remember-button yes" onclick="window.location.href='dashboard.html';">Yes</button>
+                    <button type="button" class="remember-button no" onclick="window.location.href='dashboard.html';">No</button>
+                </div>
             </div>
         </div>
     </div>
-
-    <script>
-        document.getElementById('loginForm').addEventListener('submit', function(event) {
-            const usernameInput = document.getElementById('username');
-            const usernameError = document.getElementById('username-error');
-            if (!usernameInput.value.trim()) {
-                event.preventDefault();
-                usernameError.style.display = 'block';
-            } else {
-                usernameError.style.display = 'none';
-            }
-        });
-    </script>
 </body>
 </html>

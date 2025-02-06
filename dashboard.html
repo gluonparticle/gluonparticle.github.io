@@ -1,138 +1,134 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard - Orb Connect</title>
-    <style>
-        /* Color Palette - (Copied from your final setup - styles.css) */
-        :root {
-            --color-bluish-1: #3165A4;
-            --color-bluish-2: #2B5D98;
-            --color-bluish-3: #3872B3;
-            --color-bluish-4: #437DBF;
-            --color-greyish-1: #F5F5F5;
-            --color-greyish-2: #838383;
-            --color-greyish-3: #585858;
-            --color-error-red: rgb(232, 17, 35);
-            --color-light-gray: #ddd;
-        }
+  <meta charset="UTF-8">
+  <title>Dashboard - Dark Blue Theme</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
 
-        body {
-            font-family: sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: var(--color-greyish-1);
-            color: var(--color-greyish-3);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-        }
+    :root {
+      --sidebar-width: 350px;
+      --sidebar-padding: 1.2rem;
+      --nav-main-margin-bottom: 25rem; /* Distance between nav-main and nav-secondary */
+      --sidebar-border-radius: 0.5rem;
+      --sidebar-edge-margin: 0.3rem; /* Margin from top, left, and bottom edges of the screen */
+    }
 
-        .big-box-container {
-            max-width: 90%;
-            width: 450px;
-            background-color: white;
-            display: flex;
-            flex-direction: column;
-            align-items: stretch;
-            padding: 0;
-            border: 1px solid var(--color-greyish-2);
-            border-radius: 0;
-            overflow: hidden;
-            margin: 10px;
-        }
+    body {
+      font-family: 'Poppins', sans-serif;
+      margin: 0;
+      background-color: white; /* Screen background color */
+    }
 
-        .logo-box {
-            padding: 15px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            background-color: white;
-            border-bottom: 1px solid var(--color-greyish-2);
-            border-radius: 0;
-            margin-bottom: 0;
-        }
+    .sidebar {
+      width: var(--sidebar-width);
+      padding: var(--sidebar-padding);
+      background-color: #5d817e3e;
+      /* Add gap between the container and the screen's top, left, and bottom edges */
+      margin: var(--sidebar-edge-margin) 0  var(--sidebar-edge-margin) var(--sidebar-edge-margin);
+      border-radius: var(--sidebar-border-radius);
+      height: calc(100vh - (2 * var(--sidebar-edge-margin)));
+      display: flex;
+      flex-direction: column;
+      box-sizing: border-box;
+    }
 
-        .form-and-text-box {
-            padding: 30px;
-            background-color: white;
-            border-radius: 0;
-        }
+    /* Center the logo content horizontally along its center line */
+    .logo-container {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 2rem;
+    }
+    .logo-container img {
+      max-width: 100%;
+      height: auto;
+    }
 
-        .login-logo {
-            display: block;
-            max-width: 100%;
-            height: auto;
-            margin-bottom: 0;
-            transform: scale(0.7);
-        }
+    .nav-main,
+    .nav-secondary {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+    .nav-main {
+      margin-bottom: var(--nav-main-margin-bottom);
+    }
+    .nav-secondary {
+      margin-top: 0.5rem;
+    }
 
-        .logo-container {
-            width: 100%;
-            display: flex;
-            justify-content: center;
-        }
+    .nav-main a,
+    .nav-secondary a {
+      text-decoration: none;
+      /* Aesthetic text styling */
+      font-family: 'Poppins', sans-serif;
+      font-size: 1.2rem;
+      font-weight: 400;
+      padding: 0.75rem 1rem;
+      border-radius: 4px;
+      background-color: transparent;
+      transition: background 0.25s ease, box-shadow 0.25s ease;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .nav-main a:hover,
+    .nav-secondary a:hover {
+      background-color: #439ca298;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
 
-        .login-form-box { /* Reusing login-form-box styles for dashboard content */
-            width: 100%;
-            text-align: left; /* Changed to left align for dashboard content */
-        }
+    /* Nav label aesthetics */
+    .nav-main a span,
+    .nav-secondary a span {
+      font-weight: 600;          /* Semi-bold for visual impact */
+      letter-spacing: 0.05em;     /* Adjust letter spacing for aesthetic appeal */
+      text-transform: capitalize;/* Ensure proper capitalization */
+      color: #360d6b;
+    }
 
-        .dashboard-section {
-            margin-bottom: 10px;
-            padding: 15px;
-            border: 1px solid var(--color-greyish-2);
-            border-radius: 4px;
-        }
-
-        .dashboard-section h2 {
-            color: var(--color-bluish-2);
-            margin-top: 0;
-        }
-
-        .dashboard-section p {
-            margin-top: 5px;
-            margin-bottom: px;
-        }
-    </style>
+    /* Icon styling: use images sized uniformly */
+    .nav-main a img,
+    .nav-secondary a img {
+      height: 30px; /* Adjust to desired icon size */
+      width: auto;
+    }
+  </style>
 </head>
 <body>
-    <div class="big-box-container">
-        <div class="logo-box">
-            <div class="logo-container">
-                <img src="logo.png" alt="Orb Connect Logo" class="login-logo">
-            </div>
-        </div>
-
-        <div class="form-and-text-box">
-            <div class="login-form-box">
-                <h1>Welcome to your Dashboard!</h1>
-
-                <section class="dashboard-section">
-                    <h2>Account Overview</h2>
-                    <p><strong>Username:</strong> user123</p>
-                    <p><strong>Email:</strong> user@example.com</p>
-                    <p><strong>Plan:</strong> Premium</p>
-                </section>
-
-                <section class="dashboard-section">
-                    <h2>Connection Status</h2>
-                    <p><strong>Status:</strong> Connected</p>
-                    <p><strong>Data Usage:</strong> 50GB / 100GB</p>
-                </section>
-
-                <section class="dashboard-section">
-                    <h2>Quick Actions</h2>
-                    <ul>
-                        <li><a href="#">View Billing</a></li>
-                        <li><a href="#">Manage Profile</a></li>
-                        <li><a href="#">Support</a></li>
-                    </ul>
-                </section>
-            </div>
-        </div>
+  <div class="sidebar">
+    <div class="logo-container">
+      <img src="assets/logo2.png" alt="Logo">
     </div>
+    <nav class="nav-main">
+      <a href="#">
+        <img src="assets/overview.png" alt="Overview Icon">
+        <span>Overview</span>
+      </a>
+      <a href="#">
+        <img src="assets/bill.png" alt="Billing Icon">
+        <span>Billing</span>
+      </a>
+      <a href="#">
+        <img src="assets/plan.png" alt="Plans Icon">
+        <span>Plans</span>
+      </a>
+      <a href="#">
+        <img src="assets/AP.png" alt="Access Points Icon">
+        <span>Access Points</span>
+      </a>
+    </nav>
+    <nav class="nav-secondary">
+      <a href="#">
+        <img src="assets/settings.png" alt="Account Settings Icon">
+        <span>Account Settings</span>
+      </a>
+      <a href="#">
+        <img src="assets/help.png" alt="Help & Support Icon">
+        <span>Help &amp; Support</span>
+      </a>
+    </nav>
+  </div>
 </body>
 </html>
