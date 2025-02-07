@@ -42,7 +42,7 @@
             border: 1px solid var(--color-greyish-2);
             border-radius: 0;
             overflow: hidden;
-            margin: 10px;
+            margin: 20px;
         }
 
         .form-and-text-box {
@@ -100,11 +100,6 @@
             display: block;
         }
 
-        .login-form-box input[type="text"],
-        .login-form-box input[type="email"],
-
-        
-
         .login-form-box .button-container {
             display: flex;
             gap: 10px;
@@ -112,58 +107,49 @@
             margin-top: 40px; /* Add margin above buttons */
         }
 
-        /* Button Styles - Reused from index.html for consistency */
-        .login-form-box button[type="submit"].login-button,
-        .login-form-box button[type="button"].signup-button,
-        .login-form-box button[type="button"].remember-button { /* Added .remember-button style */
+        /* Updated Button Styles - Matching index.html effects */
+        .login-form-box button[type="button"].remember-button {
+            padding: 14px 0;
             font-family: Arial, sans-serif;
             font-weight: 550;
-            padding: 10px 20px;
-            border: none;
+            font-size: 1.1em;
             border-radius: 4px;
             cursor: pointer;
-            font-size: 1.1em;
-            flex-grow: 0; /* Buttons don't need to grow on remember-me page */
             text-align: center;
-            min-width: 100px; /* Ensure buttons have a minimum width */
+            transition: all 0.3s ease;
+            min-width: 100px;
         }
 
-        .login-form-box button[type="submit"].login-button {
-            background-color: var(--color-bluish-3);
-            color: white;
-        }
-
-        .login-form-box button[type="submit"].login-button:hover {
-            background-color: var(--color-bluish-3);
-        }
-
-        .login-form-box button[type="button"].signup-button {
-            background-color: var(--color-light-gray);
-            color: #393194;
-            border: 1px solid #ffffff;
-        }
-
-        .login-form-box button[type="button"].signup-button:hover {
-            background-color: var(--color-bluish-3);
-            color: #ffffff;
-        }
-
-        /* Styles for Yes/No buttons on remember-me page - using signup-button style as base */
-        .login-form-box button[type="button"].remember-button {
-            background-color: #FFFFFF; /* Light gray background */
-            color: #393194;
-            border: 1px solid #838383;
-        }
-
+        /* Yes Button: Blue background similar to login-button */
         .login-form-box button[type="button"].remember-button.yes {
-            background-color: var(--color-bluish-3); /* Blue background for Yes button */
+            background-color: var(--color-bluish-3);
             color: white;
-            border: none; /* Remove border for Yes button */
+            border: none;
+        }
+        .login-form-box button[type="button"].remember-button.yes:hover {
+            background-color: #235385;
+            transform: scale(1.00);
+        }
+        .login-form-box button[type="button"].remember-button.yes:active {
+            background-color: #1f4c7a;
+            transform: scale(0.98);
         }
 
-        .login-form-box button[type="button"].remember-button:hover {
-            background-color: var(--color-bluish-3);
-            color: #ffffff;
+        /* No Button: White background similar to signup-button */
+        .login-form-box button[type="button"].remember-button.no {
+            background-color: #ffffff;
+            color: #393194;
+            border: 1px solid var(--color-greyish-2);
+        }
+        .login-form-box button[type="button"].remember-button.no:hover {
+            background-color: #235385;
+            color: white;
+            transform: scale(1.0);
+        }
+        .login-form-box button[type="button"].remember-button.no:active {
+            background-color: #1f4c7a;
+            color: white;
+            transform: scale(0.98);
         }
 
         /* Error message styles - unchanged */
@@ -189,8 +175,6 @@
             .form-and-text-box {
                 padding: 20px 15px;
             }
-            .login-form-box button[type="submit"].login-button,
-            .login-form-box button[type="button"].signup
             .login-form-box button[type="button"].remember-button {
                 font-size: 0.9em;
                 padding: 9px 15px;
@@ -211,7 +195,6 @@
                 max-width: 400px;
                 margin: 10px;
             }
-
             .login-form-box button[type="button"].remember-button {
                 font-size: 0.85em;
                 padding: 8px 15px;
@@ -219,7 +202,6 @@
             .login-form-box .button-container {
                 flex-direction: column;
             }
-            .login-form-box button[type="button"].signup
             .login-form-box button[type="button"].remember-button {
                 margin-top: 10px;
             }
@@ -233,9 +215,9 @@
     <div class="big-box-container">
         <div class="form-and-text-box">
             <div class="login-form-box">
-                <p class="question">Stay signed in?</p> <!-- Vertical distance between top of container and "Stay signed in?" is defined by margin-bottom in .question -->
-                <p class="description">Check this option to reduce the number of times you are asked to sign in.</p> <!-- Vertical distance between description and Yes/No buttons is defined by margin-bottom in .description -->
-                <div class="button-container"></div>
+                <p class="question">Stay signed in?</p>
+                <p class="description">Select this option to reduce the number of times you are asked to sign in.</p>
+                <div class="button-container">
                     <button type="button" class="remember-button yes" onclick="window.location.href='dashboard.html';">Yes</button>
                     <button type="button" class="remember-button no" onclick="window.location.href='dashboard.html';">No</button>
                 </div>
