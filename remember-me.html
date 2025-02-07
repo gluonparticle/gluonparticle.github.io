@@ -32,8 +32,8 @@
         }
 
         .big-box-container {
-            max-width: 90%;
-            width: 450px;
+            max-width: 80%;
+            width: 400px;
             background-color: white;
             display: flex;
             flex-direction: column;
@@ -42,14 +42,14 @@
             border: 1px solid var(--color-greyish-2);
             border-radius: 0;
             overflow: hidden;
-            margin: 20px;
+            margin: 10px;
         }
 
         .form-and-text-box {
             padding: 30px;
             background-color: white;
             border-radius: 0;
-            text-align: center; /* Center text in form-and-text-box */
+            text-align: left; /* Center text in form-and-text-box */
         }
 
         .form-and-text-box p.question {
@@ -61,7 +61,7 @@
         .form-and-text-box p.description {
             font-size: 1.2em; /* Normal font size for description */
             color: var(--color-greyish-3); /* Greyish color for description */
-            margin-bottom: 15px; /* Space below description */
+            margin-bottom: 25px; /* Space below description */
         }
 
         .login-logo {
@@ -102,23 +102,8 @@
 
         .login-form-box input[type="text"],
         .login-form-box input[type="email"],
-        .login-form-box input[type="password"] {
-            padding: 12px;
-            margin-bottom: 10px;
-            border: 1px solid var(--color-greyish-2);
-            border-radius: 4px;
-            width: calc(100% - 2px);
-            box-sizing: border-box;
-        }
 
-        .login-form-box #forgot-password {
-            display: block;
-            text-align: left;
-            margin-bottom: 30px;
-            margin-top: 0;
-            font-size: 0.85em;
-            margin-left: 4px;
-        }
+        
 
         .login-form-box .button-container {
             display: flex;
@@ -165,7 +150,7 @@
 
         /* Styles for Yes/No buttons on remember-me page - using signup-button style as base */
         .login-form-box button[type="button"].remember-button {
-            background-color: var(--color-light-gray); /* Light gray background */
+            background-color: #FFFFFF; /* Light gray background */
             color: #393194;
             border: 1px solid #838383;
         }
@@ -205,7 +190,7 @@
                 padding: 20px 15px;
             }
             .login-form-box button[type="submit"].login-button,
-            .login-form-box button[type="button"].signup-button,
+            .login-form-box button[type="button"].signup
             .login-form-box button[type="button"].remember-button {
                 font-size: 0.9em;
                 padding: 9px 15px;
@@ -226,8 +211,7 @@
                 max-width: 400px;
                 margin: 10px;
             }
-            .login-form-box button[type="submit"].login-button,
-            .login-form-box button[type="button"].signup-button,
+
             .login-form-box button[type="button"].remember-button {
                 font-size: 0.85em;
                 padding: 8px 15px;
@@ -235,7 +219,7 @@
             .login-form-box .button-container {
                 flex-direction: column;
             }
-            .login-form-box button[type="button"].signup-button,
+            .login-form-box button[type="button"].signup
             .login-form-box button[type="button"].remember-button {
                 margin-top: 10px;
             }

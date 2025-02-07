@@ -98,6 +98,7 @@
             display: block;
         }
 
+        /* Set input fields to full container width (aligned with buttons) */
         .login-form-box input[type="text"],
         .login-form-box input[type="email"],
         .login-form-box input[type="password"] {
@@ -105,68 +106,63 @@
             margin-bottom: 10px;
             border: 1px solid var(--color-greyish-2);
             border-radius: 4px;
-            width: calc(100% - 2px);
+            width: 100%;
             box-sizing: border-box;
-        }
-
-        .login-form-box #forgot-password {
-            display: block;
-            text-align: left;
-            margin-bottom: 30px;
-            margin-top: 0;
-            font-size: 0.85em;
-            margin-left: 4px;
-        }
-
-        .login-form-box .button-container {
-            display: flex;
-            gap: 10px;
-            justify-content: stretch;
-            margin-top: 10px;
+            font-size: 1.1rem;
         }
 
         /* Placeholder styles for Username input */
         #username::placeholder {
-            font-family: Arial, Times New Roman, monospace;
+            font-family: Arial, sans-serif;
             font-size: 1.05rem;
             font-weight: 400;
         }
         #username::-webkit-input-placeholder {
-            font-family: Times New Roman, Courier;
+            font-family: Arial, sans-serif;
             font-size: 1.05rem;
             font-weight: 400;
         }
         #username:-ms-input-placeholder {
-            font-family: Arial, monospace;
+            font-family: Arial, sans-serif;
             font-size: 1.05rem;
             font-weight: 400;
         }
 
         /* Placeholder styles for Password input */
         #password::placeholder {
-            font-family: Arial, Times New Roman, monospace;
+            font-family: Arial, sans-serif;
             font-size: 1.05rem;
             font-weight: 400;
         }
         #password::-webkit-input-placeholder {
-            font-family: Times New Roman, Courier;
+            font-family: Arial, sans-serif;
             font-size: 1.05rem;
             font-weight: 400;
         }
         #password:-ms-input-placeholder {
-            font-family: 'Courier New', monospace;
+            font-family: Arial, sans-serif;
             font-size: 1.05rem;
             font-weight: 400;
         }
 
-        /* Override login and signup button fonts to Arial.
-           Currently the buttons inherit the global font ("sans-serif") from the body.
-        */
+        /* Aligning button container to match input width */
+        .login-form-box .button-container {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        /* Button styles with flex so they span the full width as inputs */
         .login-form-box button[type="submit"].login-button,
         .login-form-box button[type="button"].signup-button {
             font-family: Arial, sans-serif;
             font-weight: 550;
-        
+            font-size: 1.1em;
+            border-radius: 4px;
+            cursor: pointer;
+            flex: 1;
+            text-align: center;
+            transition: all 0.3s ease;
         }
 
         .login-form-box button[type="submit"].login-button {
@@ -174,15 +170,16 @@
             background-color: var(--color-bluish-3);
             color: white;
             border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 1.1em;
-            flex-grow: 1;
-            text-align: center;
         }
 
         .login-form-box button[type="submit"].login-button:hover {
-            background-color: var(--color-bluish-3);
+            background-color: #235385;
+            transform: scale(1);
+        }
+
+        .login-form-box button[type="submit"].login-button:active {
+            background-color: #1f4c7a;
+            transform: scale(0.98);
         }
 
         .login-form-box button[type="button"].signup-button {
@@ -190,22 +187,30 @@
             background-color: #ffffff;
             color: #393194;
             border: 1px solid #838383;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 1.1em;
-            flex-grow: 1;
-            text-align: center;
         }
 
         .login-form-box button[type="button"].signup-button:hover {
             background-color: var(--color-bluish-3);
-            color: #ffffff;
+            color: white;
+            transform: scale(1);
         }
-        /* Add this rule to your <style> block to adjust the color of "Forgot your password?" */
+
+        .login-form-box button[type="button"].signup-button:active {
+            background-color: #1f4c7a;
+            color: white;
+            transform: scale(0.98);
+        }
+
+        /* Adjust "Forgot your password?" color & redirect to password-reset.html */
         #forgot-password {
-            color: #443ba6; /* Change this hex value to your desired color */
+            color: #443ba6;
+            font-size: 0.85em;
+            margin-left: 4px;
+            display: block;
+            text-align: left;
+            margin-top: 0;
+            margin-bottom: 30px;
         }
-        
 
         .error-message-custom {
             font-weight: 400;
@@ -286,7 +291,7 @@
 
                     <label for="password">Password:</label>
                     <input type="password" id="password" name="password" placeholder="Enter password" required>
-                    <a href="/password-reset-request" id="forgot-password">Forgot your password?</a>
+                    <a href="password-reset.html" id="forgot-password">Forgot your password?</a>
 
                     <div class="button-container">
                         <button type="submit" class="login-button" onclick="window.location.href='remember-me.html';">Login</button>
