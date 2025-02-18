@@ -266,7 +266,7 @@
           <!-- GAP3: Gap between "Confirm Password:" and button container is controlled by margin-top in .button-container -->
           <div class="button-container">
             <button type="submit" class="login-button">Register</button>
-            <button type="button" class="signup-button">Cancel</button>
+            <button type="button" class="signup-button" id="cancelButton">Cancel</button>
           </div>
         </form>
       </div>
@@ -296,6 +296,12 @@
       } else {
         registrationError.style.display = 'none';
       }
+    });
+
+    // Add event listener to the Cancel button
+    document.getElementById('cancelButton').addEventListener('click', function() {
+      // Redirect to index.html
+      window.location.href = 'index.html';
     });
   </script>
 </body>

@@ -2,21 +2,18 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard - Orb Connect</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap">
     <style>
-        /* Styles - Combined and refined dashboard styles with gauge charts and layout fixes */
-        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
-
         :root {
             --sidebar-width: 300px;
             --sidebar-padding: 1.2rem;
-            --nav-main-margin-bottom: 29rem;
-            --sidebar-border-radius: 0.5rem;
             --master-margin: 0.55rem;
             --content-indent-percent: 3%;
             --account-info-margin: var(--content-indent-percent);
             --user-info-margin: var(--content-indent-percent);
-            --chart-margin: 1.5rem; /* Variable for chart spacing */
+            --chart-margin: 1.5rem;
             --color-bluish-1: #3165A4;
             --color-bluish-2: #265797;
             --color-bluish-3: #3872B3;
@@ -31,7 +28,7 @@
 
         body {
             font-family: 'Poppins', Arial, sans-serif;
-            margin: 0;
+            margin: var(--master-margin); /* Apply master margin to body */
             padding: 0;
             background-color: var(--color-greyish-1);
             color: var(--color-greyish-3);
@@ -39,25 +36,88 @@
             justify-content: flex-start;
             align-items: flex-start;
             min-height: 20vh;
-            margin: var(--master-margin);
             overflow-x: hidden;
             box-sizing: border-box;
         }
 
-        /* Sidebar, Logo, Nav Styles - UNCHANGED - (Ensuring Sidebar Stability) */
-        .sidebar { width: var(--sidebar-width); padding: var(--sidebar-padding); background-color: #5d817e3e; border-radius: var(--sidebar-border-radius); height: calc(100vh - (2 * var(--master-margin))); display: flex; flex-direction: column; box-sizing: border-box; margin-right: var(--master-margin); }
-        .logo-container { display: flex; align-items: center; justify-content: center; margin-bottom: 1.5rem; }
-        .logo-container img { max-width: 100%; height: auto; }
-        .logo-divider { border-bottom: 2px solid var(--dark-brown); margin-bottom: 1.5rem; width: 98%; align-self: center; }
-        .nav-main, .nav-secondary { display: flex; flex-direction: column; gap: 0.8rem; }
-        .nav-main { margin-bottom: var(--nav-main-margin-bottom); }
-        .nav-secondary { margin-top: 0.5rem; }
-        .nav-main a, .nav-secondary a { text-decoration: none; font-family: 'Poppins', Arial, sans-serif; font-size: 1rem; font-weight: 400; padding: 0.6rem 0.8rem; border-radius: 4px; background-color: transparent; transition: background 0.25s ease, box-shadow 0.25s ease, background-color 0.1s linear; display: flex; align-items: center; gap: 0.5rem; color: #360d6b; transform: scale(0.95); transform-origin: left center; }
-        .nav-main a:hover, .nav-secondary a:hover, .nav-main a:focus, .nav-secondary a:focus { background-color: #439ca298; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); transform: scale(1); }
-        .nav-main a:active, .nav-secondary a:active { background-color: #346e73; }
-        .nav-main a.active, .nav-secondary a.active { background-color: #439ca298; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); transform: scale(1); }
-        .nav-main a span, .nav-secondary a span { font-weight: 600; letter-spacing: 0.05em; text-transform: capitalize; font-size: 1.05em; }
-        .nav-main a img, .nav-secondary a img { height: 25px; width: auto; }
+        .sidebar {
+            width: var(--sidebar-width);
+            padding: var(--sidebar-padding);
+            background-color: #5d817e3e;
+            border-radius: 0.5rem;
+            height: calc(100vh - (2 * var(--master-margin)));
+            display: flex;
+            flex-direction: column;
+            box-sizing: border-box;
+            margin-right: var(--master-margin);
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .logo-container img {
+            max-width: 100%;
+            height: auto;
+        }
+
+        .logo-divider {
+            border-bottom: 2px solid var(--dark-brown);
+            margin-bottom: 1.5rem;
+            width: 98%;
+            align-self: center;
+        }
+
+        .nav-main, .nav-secondary {
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
+        }
+
+        .nav-main {
+            margin-bottom: 29rem;
+        }
+
+        .nav-link {
+            text-decoration: none;
+            font-family: 'Poppins', Arial, sans-serif;
+            font-size: 1rem;
+            font-weight: 400;
+            padding: 0.6rem 0.8rem;
+            border-radius: 4px;
+            background-color: transparent;
+            color: #360d6b;
+            transition: all 0.25s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            cursor: pointer; /* Make it look clickable */
+        }
+
+        .nav-link:hover {
+            background-color: #439ca298;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transform: scale(1);
+        }
+
+        .nav-link:active {
+            background-color: #346e73;
+        }
+
+        .nav-link span {
+            font-weight: 600;
+            letter-spacing: 0.05em;
+            text-transform: capitalize;
+            font-size: 1.05em;
+        }
+
+        .nav-link img {
+            height: 25px;
+            width: auto;
+        }
 
         .content-area {
             flex-grow: 1;
@@ -68,188 +128,81 @@
             background-color: white;
             height: calc(100vh - (2 * var(--master-margin)));
             overflow-y: auto;
-            margin-top: 0;
-            margin-bottom: 0;
+            margin-left: 0;
+            margin-right: 0;
             padding-left: calc(var(--content-indent-percent) + 20px);
         }
 
-        /* Mobile Menu Icon Styles - UNCHANGED */
-        .menu-icon { display: none; position: absolute; top: var(--master-margin); right: var(--master-margin); padding: 10px; cursor: pointer; z-index: 10; }
-        .menu-line { width: 25px; height: 3px; background-color: var(--color-greyish-3); margin: 5px 0; transition: transform 0.3s ease, opacity 0.3s ease; }
-        /* Mobile Sidebar Styles - UNCHANGED */
-        body.sidebar-open .sidebar { transform: translateX(0); box-shadow: 5px 0 15px rgba(0,0,0,0.3); }
-        body.sidebar-open .content-area { transform: translateX(var(--sidebar-width)); }
-        @media (max-width: 768px), (orientation: portrait) { :root { --master-margin: 0.6rem; --sidebar-width: 250px; --nav-main-margin-bottom: 3rem; } body { margin-left: 0; margin-right: 0; margin-top: 0; margin-bottom: 0; overflow-x: auto; } .sidebar { position: fixed; top: var(--master-margin); left: var(--master-margin); height: calc(100vh - (2 * var(--master-margin))); margin-right: 0; transform: translateX(-100%); transition: transform 0.3s ease; z-index: 100; } .content-area { border-radius: 0; box-shadow: none; margin-left: 0; transition: transform 0.3s ease; height: 100vh; padding-left: 20px; } .logo-container { margin-bottom: 1rem; } .nav-main { margin-bottom: 2rem; } .menu-icon { display: block; } }
-
-        /* Dashboard Section Styles - MODIFIED - margin-left removed from h2 */
-        .dashboard-section {
-            padding: 20px;
-            border-radius: 8px;
-            margin-bottom: 20px;
-        }
-
-        .dashboard-section h2 {
-            color: var(--color-bluish-2);
-            margin-bottom: 25px;
-            font-size: 2.2em; /* Adjusted font size to be bigger */
-            margin-left: 0; /* Removed margin-left from section heading */
-            text-align: left; /* Ensure left alignment of heading */
-        }
-
-        .hidden { display: none !important; }
-
-        /* Login Form Box Styles (for Account Settings) - MODIFIED - margin-left and max-width adjusted */
-        .login-form-box {
-            width: 100%;
-            text-align: left; /* Changed to left align text */
-            max-width: 700px; /* Increased max-width for form */
-            margin-left: var(--account-info-margin); /* Indent form using variable */
-        }
-
-
-        .login-form-box form {
-            display: flex;
-            flex-direction: column;
-            width: 100%;
-            max-width: none;
-            margin: 0; /* Reset form margins */
-            text-align: left;
-        }
-
-
-        .login-form-box h2 {
-            margin-bottom: 10px;
-            font-size: 2.2em;
-        }
-
-
-        /* Name row container - UNCHANGED */
-        .name-row {
-            display: flex;
-            gap: 4px;
-            justify-content: space-between;
-            width: 100%;
-        }
-
-        .login-form-box label {
-            margin-top: 9px;
-            margin-bottom: 6px;
-            font-weight: bold;
-            text-align: left;
-            display: block;
-        }
-
-        .login-form-box input[type="text"],
-        .login-form-box input[type="email"],
-        .login-form-box input[type="password"] {
-            padding: 12px;
-            margin-bottom: 11px;
-            border: 1px solid var(--color-greyish-2);
-            border-radius: 4px;
-            width: calc(100% - 2px);
-            box-sizing: border-box;
-            font-size: 1.1rem;
-        }
-
-
-        .login-form-box .button-container {
-            display: flex;
-            gap: 10px;
-            justify-content: flex-start; /* Left align buttons */
-            margin-top: 30px; /* Reduced margin above buttons */
-            margin-left: 0; /* Reset button container margin-left */
-        }
-
-
-        /* Button styles - UNCHANGED */
-        .login-form-box button[type="submit"].save-button,
-        .login-form-box button[type="button"].cancel-button {
-            padding: 14px 0;
-            font-family: Arial, sans-serif;
-            font-weight: 550;
-            font-size: 1.1em;
-            border-radius: 4px;
+        .menu-icon {
+            display: none;
+            position: absolute;
+            top: var(--master-margin);
+            right: var(--master-margin);
+            padding: 10px;
             cursor: pointer;
-            width: 140px; /* Fixed button width */
-            text-align: center;
-            display: inline-block;
-            transition: all 0.3s ease;
+            z-index: 10;
         }
 
-        .login-form-box button[type="submit"].save-button {
-            background-color: var(--color-bluish-3);
-            color: white;
-            border: none;
+        .menu-line {
+            width: 25px;
+            height: 3px;
+            background-color: var(--color-greyish-3);
+            margin: 5px 0;
+            transition: transform 0.3s ease, opacity 0.3s ease;
         }
 
-        .login-form-box button[type="button"].cancel-button {
-            background-color: white;
-            color: #393194;
-            border: 1px solid var(--color-greyish-2);
+        @media (max-width: 768px), (orientation: portrait) {
+            :root {
+                --master-margin: 0.6rem;
+                --sidebar-width: 250px;
+                --nav-main-margin-bottom: 3rem;
+            }
+
+            body {
+                margin-left: 0;
+                margin-right: 0;
+                margin-top: 0;
+                margin-bottom: 0;
+                overflow-x: auto;
+            }
+
+            .sidebar {
+                position: fixed;
+                top: var(--master-margin);
+                left: var(--master-margin);
+                height: calc(100vh - (2 * var(--master-margin)));
+                transform: translateX(-100%);
+                transition: transform 0.3s ease;
+            }
+
+            .content-area {
+                border-radius: 0;
+                box-shadow: none;
+                margin-left: 0;
+                transition: transform 0.3s ease;
+                height: 100vh;
+                padding-left: 20px;
+            }
+
+            .logo-container {
+                margin-bottom: 1rem;
+            }
+
+            .nav-main {
+                margin-bottom: 2rem;
+            }
+
+            .menu-icon {
+                display: block;
+            }
         }
 
-
-        /* Gauge Chart Styles */
-        .gauge-chart-container {
-            display: flex;
-            justify-content: space-around; /* Distribute charts evenly */
-            margin-bottom: 30px; /* Spacing below charts */
-            margin-left: calc(var(--chart-margin) * -1); /* Negative margin to offset padding */
-            margin-right: calc(var(--chart-margin) * -1);
+        .hidden {
+            display: none !important;
         }
-
-        .gauge-chart {
-            width: 200px; /* Fixed width for gauges */
-            height: 150px; /* Fixed height for gauges */
-            margin-left: var(--chart-margin); /* Spacing between charts */
-            margin-right: var(--chart-margin);
-        }
-
-        /* Usage History and Cost Section Styles */
-        .usage-cost-container {
-            display: flex;
-            justify-content: flex-start; /* Align items to start */
-            align-items: center; /* Vertically align items */
-            gap: 20px; /* Spacing between Usage History and Cost */
-             margin-left: var(--user-info-margin); /* Indent Usage History and Cost section */
-        }
-
-        .usage-history {
-            flex: 2; /* Take more space for Usage History */
-            min-width: 40%; /* Minimum width for Usage History */
-            /* Add styling for line graph placeholder here if needed */
-            border: 1px dashed var(--color-greyish-2); /* Placeholder dashed border */
-            height: 100px; /* Placeholder height */
-            text-align: center;
-            line-height: 100px; /* Vertically center placeholder text */
-            color: var(--color-greyish-3);
-        }
-
-        .cost-info {
-            flex: 1; /* Take remaining space for Cost info */
-            display: flex;
-            align-items: center;
-            gap: 5px;
-        }
-
-        .cost-icon {
-            width: 30px;
-            height: 30px;
-            border-radius: 50%;
-            background-color: var(--color-bluish-3); /* Example icon background */
-            color: white;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 1.2em;
-        }
-
-
     </style>
-    <script src="https://cdn.zingchart.com/zingchart.min.js"></script>
 </head>
 <body>
-
     <div class="menu-icon" onclick="toggleSidebar()">
         <div class="menu-line"></div>
         <div class="menu-line"></div>
@@ -262,200 +215,73 @@
         </div>
         <div class="logo-divider"></div>
         <nav class="nav-main">
-            <a href="#" data-content="overview" class="nav-link active"> <img src="assets/overview.png" alt="Overview Icon"> <span>Overview</span> </a>
-            <a href="#" data-content="billing" class="nav-link"> <img src="assets/bill.png" alt="Billing Icon"> <span>Billing</span> </a>
-            <a href="#" data-content="plans" class="nav-link"> <img src="assets/plan.png" alt="Plans Icon"> <span>Plans</span> </a>
-            <a href="#" data-content="ap" class="nav-link"> <img src="assets/AP.png" alt="Access Points Icon"> <span>Access Points</span> </a>
+            <a href="#" data-content="overview" onclick="loadContent('overview', this)" class="nav-link active">
+                <img src="assets/overview.png" alt="Overview Icon">
+                <span>Overview</span>
+            </a>
+            <a href="#" data-content="billing" onclick="loadContent('billing', this)" class="nav-link">
+                <img src="assets/bill.png" alt="Billing Icon">
+                <span>Billing</span>
+            </a>
+            <a href="#" data-content="plans" onclick="loadContent('plans', this)" class="nav-link">
+                <img src="assets/plan.png" alt="Plans Icon">
+                <span>Plans</span>
+            </a>
+            <a href="#" data-content="ap" onclick="loadContent('ap', this)" class="nav-link">
+                <img src="assets/AP.png" alt="Access Points Icon">
+                <span>Access Points</span>
+            </a>
         </nav>
         <nav class="nav-secondary">
-            <a href="#" data-content="settings" class="nav-link"> <img src="assets/settings.png" alt="Account Settings Icon"> <span>Account Settings</span> </a>
-            <a href="#" data-content="help" class="nav-link"> <img src="assets/help.png" alt="Help & Support Icon"> <span>Help & Support</span> </a>
+            <a href="#" data-content="Account-Settings" onclick="loadContent('Account-Settings', this)" class="nav-link">
+                <img src="assets/settings.png" alt="Account Settings Icon">
+                <span>Account Settings</span>
+            </a>
+            <a href="#" data-content="help" onclick="loadContent('help', this)" class="nav-link">
+                <img src="assets/help.png" alt="Help & Support Icon">
+                <span>Help & Support</span>
+            </a>
         </nav>
     </div>
 
-    <div class="content-area">
-        <!-- Overview Content -->
-        <div id="overview-content" class="dashboard-section">
+    <div class="content-area" id="content-area">
+        <div class="dashboard-section" id="dashboard-content">
             <h2>Overview</h2>
-            <div class="gauge-chart-container">
-                <div id="dataUsageChart" class="gauge-chart"></div>
-                <div id="ratioChart" class="gauge-chart"></div>
-                <div id="dataSharedChart" class="gauge-chart"></div>
-            </div>
-
-            <div class="usage-cost-container">
-                <div class="usage-history">
-                    Usage History Line Graph Here
-                </div>
-                <div class="cost-info">
-                    <div class="cost-icon">£</div> Cost info here
-                </div>
-            </div>
+            <p>Select an option from the sidebar to view content.</p>
         </div>
-
-        <!-- Account Settings Content -->
-        <div id="settings-content" class="dashboard-section hidden">
-            <div class="login-form-box">
-                <h2>Account Information</h2>
-                <hr class="section-divider">
-                <form action="/settings" method="post" id="settingsForm">
-                    <div class="name-row">
-                        <div class="name-input">
-                            <label for="firstName">First Name:</label>
-                            <input type="text" id="firstName" name="firstName" placeholder="Enter First Name" value="John" required>
-                        </div>
-                        <div class="name-input">
-                            <label for="lastName">Last Name:</label>
-                            <input type="text" id="lastName" name="lastName" placeholder="Enter Last Name" value="Doe" required>
-                        </div>
-                    </div>
-
-                    <label for="email">Email:</label>
-                    <input type="email" id="email" name="email" placeholder="Enter Email" value="john.doe@example.com" required>
-
-                    <label for="username">Username:</label>
-                    <input type="text" id="username" name="username" placeholder="Enter Username" value="johndoe123" required>
-
-                    <label for="password">Password:</label>
-                    <input type="password" id="password" name="password" placeholder="Enter Password" value="P@$$wOrd123">
-
-                    <label for="confirmPassword">Confirm Password:</label>
-                    <input type="password" id="confirmPassword" name="confirmPassword" placeholder="Confirm Password" value="P@$$wOrd123">
-
-                    <div class="button-container">
-                        <button type="submit" class="login-button save-button">Save</button>
-                        <button type="button" class="signup-button cancel-button">Cancel</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-
-        <!-- Other Content Sections (hidden by default) -->
-        <div id="billing-content" class="dashboard-section hidden"> <h2>Billing</h2> <p>This is the billing section content.</p> </div>
-        <div id="plans-content" class="dashboard-section hidden">   <h2>Plans</h2>    <p>This is the plans section content.</p> </div>
-        <div id="ap-content" class="dashboard-section hidden">      <h2>Access Points</h2> <p>This is the Access Points section content.</p> </div>
-        <div id="help-content" class="dashboard-section hidden">   <h2>Help & Support</h2> <p>This is the Help & Support section content.</p> </div>
-
     </div>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const navLinks = document.querySelectorAll('.nav-link');
-            const contentSections = document.querySelectorAll('.dashboard-section');
+        function loadContent(contentId, element) {
+            const contentUrl = `dashboard/${contentId}.html`;
+            const contentArea = document.getElementById('dashboard-content');
 
-            navLinks.forEach(link => {
-                link.addEventListener('click', function(event) {
-                    event.preventDefault();
+            fetch(contentUrl)
+                .then(response => response.text())
+                .then(data => {
+                    contentArea.innerHTML = data; // Replace content of dashboard-section
 
-                    const contentId = this.getAttribute('data-content') + '-content';
-
-                    contentSections.forEach(section => {
-                        section.classList.add('hidden');
+                    // Update active link
+                    document.querySelectorAll('.nav-link').forEach(link => {
+                        link.classList.remove('active');
                     });
-
-                    const selectedContent = document.getElementById(contentId);
-                    if (selectedContent) {
-                        selectedContent.classList.remove('hidden');
-                    }
-
-                    navLinks.forEach(navLink => {
-                        navLink.classList.remove('active');
-                    });
-                    this.classList.add('active');
-                    if (window.innerWidth <= 768 || window.matchMedia('(orientation: portrait)').matches) {
-                        toggleSidebar(false);
-                    }
+                    element.classList.add('active');
+                })
+                .catch(error => {
+                    contentArea.innerHTML = `<div class="dashboard-section"><h2>Error</h2><p>Failed to load content for ${contentId}.</p></div>`;
+                    console.error('Error loading content:', error);
                 });
-            });
-
-            // Initially show Overview and set active link
-            document.getElementById('overview-content').classList.remove('hidden');
-            document.querySelector('.nav-link[data-content="overview"]').classList.add('active');
-        });
-
-        function toggleSidebar(forceClose) {
-            const body = document.body;
-            const sidebar = document.querySelector('.sidebar');
-            const menuIcon = document.querySelector('.menu-icon');
-            const isOpen = body.classList.contains('sidebar-open');
-
-            if (forceClose === true) {
-                body.classList.remove('sidebar-open');
-            } else if (forceClose === false) {
-                body.classList.remove('sidebar-open');
-            } else {
-                body.classList.toggle('sidebar-open');
-            }
         }
 
-        // --- Gauge Chart Rendering ---
-        document.addEventListener('DOMContentLoaded', () => {
-            const renderGaugeChart = (chartId, values, title, units, min, max, colorStops) => {
-                const config = {
-                    type: 'gauge',
-                    data: {
-                        type: 'gauge',
-                        plot: {
-                            aperture: 180,
-                            size: '100%',
-                            valueBox: { visible: false } // Hide default value box
-                        },
-                        scaleR: {
-                            aperture: 180,
-                            minValue: min,
-                            maxValue: max,
-                            center: { visible: false },
-                            tick: { visible: false },
-                            item: { visible: false }, // Hide labels
-                            ring: {
-                                size: 40,
-                                backgroundColor: '#e0e0e0', // Default grey ring
-                                rules: colorStops // Apply color stops for continuous color change
-                            }
-                        },
-                        series: [{
-                            values: [values],
-                            animation: { effect: 2, method: 1, sequence: 4, speed: 900 },
-                            indicator: [15, 15, 15, 15, 0] // Adjust indicator for speedometer style
-                        }]
-                    },
-                    labels: [{ // Custom labels for chart title and units
-                        text: title,
-                        x: '50%',
-                        y: '35%', // Adjust vertical position
-                        textAlign: 'center',
-                        fontSize: '1em',
-                        fontFamily: 'Arial',
-                        color: '#333'
-                    }, {
-                        text: units,
-                        x: '50%',
-                        y: '65%', // Adjust vertical position
-                        textAlign: 'center',
-                        fontSize: '0.9em',
-                        fontFamily: 'Arial',
-                        color: '#555'
-                    }]
-                };
-                zingchart.render({ id: chartId, data: config, height: '100%', width: '100%' });
-            };
+        function toggleSidebar() {
+            const body = document.body;
+            body.classList.toggle('sidebar-open');
+        }
 
-
-            // Example Color Stops for Continuous Green Gradient
-            const greenColorStops = [
-                { rule: '%v <= 30', backgroundColor: '#c8e6c9' },   // Lightest green
-                { rule: '%v > 30 && %v <= 60', backgroundColor: '#a5d6a7' }, // Medium light green
-                { rule: '%v > 60 && %v <= 80', backgroundColor: '#66bb6a' },   // Medium green
-                { rule: '%v > 80', backgroundColor: '#388e3c' }    // Darkest green
-            ];
-
-
-            renderGaugeChart('dataUsageChart', 65, 'Data Usage', 'GB', 0, 100, greenColorStops);
-            renderGaugeChart('ratioChart', 90, 'Sharing Ratio', '%', 0, 100, greenColorStops);
-            renderGaugeChart('dataSharedChart', 40, 'Data Shared', 'GB', 0, 100, greenColorStops);
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initially load overview content (or a default message)
+            loadContent('overview', document.querySelector('.nav-link[data-content="overview"]'));
         });
-
-
     </script>
 </body>
 </html>
