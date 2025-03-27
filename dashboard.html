@@ -11,8 +11,8 @@
             --sidebar-padding: 1.2rem;
             --master-margin: 0.55rem;
             --content-indent-percent: 3%;
-            --account-info-margin: var(--content-indent-percent);
-            --user-info-margin: var(--content-indent-percent);
+            --account-info-margin: var(--content_indent-percent);
+            --user-info-margin: var(--content_indent-percent);
             --chart-margin: 1.5rem;
             --color-bluish-1: #3165A4;
             --color-bluish-2: #265797;
@@ -20,7 +20,7 @@
             --color-bluish-4: #437DBF;
             --color-greyish-1: #f5f5f586;
             --color-greyish-2: #838383;
-            --color-greyish-3: #585858;
+            --color-greyish-3: #585888;
             --color-error-red: rgb(232, 17, 35);
             --color-light-gray: #ddd;
             --dark-brown: #543929;
@@ -28,7 +28,7 @@
 
         body {
             font-family: 'Poppins', Arial, sans-serif;
-            margin: var(--master-margin); /* Apply master margin to body */
+            margin: var(--master-margin);
             padding: 0;
             background-color: var(--color-greyish-1);
             color: var(--color-greyish-3);
@@ -94,7 +94,7 @@
             display: flex;
             align-items: center;
             gap: 0.5rem;
-            cursor: pointer; /* Make it look clickable */
+            cursor: pointer;
         }
 
         .nav-link:hover {
@@ -130,7 +130,7 @@
             overflow-y: auto;
             margin-left: 0;
             margin-right: 0;
-            padding-left: calc(var(--content-indent-percent) + 20px);
+            padding-left: calc(var(--content_indent-percent) + 20px);
         }
 
         .menu-icon {
@@ -215,62 +215,88 @@
         </div>
         <div class="logo-divider"></div>
         <nav class="nav-main">
-            <a href="#" data-content="overview" onclick="loadContent('overview', this)" class="nav-link active">
+            <a href="#" data-content="overview" onclick="loadContent('overview')" class="nav-link active">
                 <img src="assets/overview.png" alt="Overview Icon">
                 <span>Overview</span>
             </a>
-            <a href="#" data-content="billing" onclick="loadContent('billing', this)" class="nav-link">
+            <a href="#" data-content="billing" onclick="loadContent('billing')" class="nav-link">
                 <img src="assets/bill.png" alt="Billing Icon">
                 <span>Billing</span>
             </a>
-            <a href="#" data-content="plans" onclick="loadContent('plans', this)" class="nav-link">
+            <a href="#" data-content="plans" onclick="loadContent('plans')" class="nav-link">
                 <img src="assets/plan.png" alt="Plans Icon">
                 <span>Plans</span>
             </a>
-            <a href="#" data-content="ap" onclick="loadContent('ap', this)" class="nav-link">
+            <a href="#" data-content="ap" onclick="loadContent('ap')" class="nav-link">
                 <img src="assets/AP.png" alt="Access Points Icon">
                 <span>Access Points</span>
             </a>
+
+            <a href="#" data-content="ap" onclick="loadContent('setup')" class="nav-link">
+                <img src="assets/AP.png" alt="Setup">
+                <span>Setup</span>
+            </a>
+
         </nav>
+
+
+   
+
         <nav class="nav-secondary">
-            <a href="#" data-content="Account-Settings" onclick="loadContent('Account-Settings', this)" class="nav-link">
+            <a href="#" data-content="Account-Settings" onclick="loadContent('Account-Settings')" class="nav-link">
                 <img src="assets/settings.png" alt="Account Settings Icon">
                 <span>Account Settings</span>
             </a>
-            <a href="#" data-content="help" onclick="loadContent('help', this)" class="nav-link">
+            <a href="#" data-content="help" onclick="loadContent('help')" class="nav-link">
                 <img src="assets/help.png" alt="Help & Support Icon">
                 <span>Help & Support</span>
             </a>
         </nav>
+ 
     </div>
 
     <div class="content-area" id="content-area">
-        <div class="dashboard-section" id="dashboard-content">
-            <h2>Overview</h2>
-            <p>Select an option from the sidebar to view content.</p>
-        </div>
+        <!-- Content will be loaded here -->
     </div>
 
     <script>
-        function loadContent(contentId, element) {
-            const contentUrl = `dashboard/${contentId}.html`;
-            const contentArea = document.getElementById('dashboard-content');
+        function loadContent(contentId) {
+            let contentUrl = '';
+            switch (contentId) {
+                case 'Account-Settings':
+                    contentUrl = 'dashboard/Account-Settings.html';
+                    break;
+                case 'ap':
+                    contentUrl = 'content/1.html';
+                    break;
+                case 'help':
+                    contentUrl = 'content/help.html';
+                    break;
 
+                case 'setup':
+                    contentUrl = 'guide.html';
+                    break;
+
+
+                default:
+                    contentUrl = 'content/4.html';
+                    break;
+            }
+            
             fetch(contentUrl)
                 .then(response => response.text())
                 .then(data => {
-                    contentArea.innerHTML = data; // Replace content of dashboard-section
-
-                    // Update active link
-                    document.querySelectorAll('.nav-link').forEach(link => {
-                        link.classList.remove('active');
-                    });
-                    element.classList.add('active');
+                    document.getElementById('content-area').innerHTML = data;
                 })
                 .catch(error => {
-                    contentArea.innerHTML = `<div class="dashboard-section"><h2>Error</h2><p>Failed to load content for ${contentId}.</p></div>`;
-                    console.error('Error loading content:', error);
+                    console.error('Error:', error);
                 });
+
+            // Update active link
+            document.querySelectorAll('.nav-link').forEach(link => {
+                link.classList.remove('active');
+            });
+            event.target.classList.add('active');
         }
 
         function toggleSidebar() {
@@ -278,10 +304,10 @@
             body.classList.toggle('sidebar-open');
         }
 
-        document.addEventListener('DOMContentLoaded', function() {
-            // Initially load overview content (or a default message)
-            loadContent('overview', document.querySelector('.nav-link[data-content="overview"]'));
-        });
+        // Load default content when the page loads
+        window.onload = function() {
+            loadContent('overview');
+        };
     </script>
 </body>
 </html>
