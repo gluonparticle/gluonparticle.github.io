@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Orb Connect</title>
+    <style>
+
+        :root {
+            --color-bluish-3: #3872B3;
+            --color-greyish-1: #F5F5F5;
+            --color-greyish-2: #838383;
+            --color-light-gray: #ddd;
+        }
+
+        /* Body styles */
+        body {
+            font-family: sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: var(--color-greyish-1);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        /* Container to center the buttons */
+        .button-container {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            align-items: center;
+            width: 60%; /* Set width of the container for equal button width */
+        }
+
+        /* Style for buttons */
+        .login-button, .signup-button {
+            padding: 14px 0; /* Increase vertical padding for equal height */
+            font-family: Arial, sans-serif;
+            font-weight: 550;
+            font-size: 1.1em;
+            border-radius: 4px;
+            cursor: pointer;
+            width: 100%; /* Make buttons take up equal width */
+            text-align: center;
+            display: inline-block;
+            transition: all 0.3s ease; /* Smooth transition for hover and active effects */
+        }
+
+        .login-button {
+            background-color: var(--color-bluish-3);
+            color: white;
+            border: none;
+        }
+
+        .login-button:hover {
+            background-color: #235385; /* Slightly darker blue for hover */
+            transform: scale(1.00); /* Slight scale effect on hover */
+        }
+
+        .login-button:active {
+            background-color: #1f4c7a; /* Even darker blue for click effect */
+            transform: scale(0.98); /* Slight shrink effect on click */
+        }
+
+        .signup-button {
+            background-color: #ffffff;
+            color: #393194;
+            border: 1px solid var(--color-greyish-2);
+        }
+
+        .signup-button:hover {
+            background-color: #235385; /* Lighter grey for hover */
+            color: white;
+            transform: scale(1.0); /* Slight scale effect on hover */
+        }
+
+        .signup-button:active {
+            background-color: #1f4c7a; /* Darker blue for click effect */
+            color: white;
+            transform: scale(0.98); /* Slight shrink effect on click */
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="button-container">
+        <button class="login-button">Login</button>
+        <button class="signup-button">Sign Up</button>
+    </div>
+
+</body>
+</html>
