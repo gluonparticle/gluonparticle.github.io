@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Register - Orb Connect</title>
   <style>
-    /* Color Palette - (Copied from your final setup - styles.css) */
+    /* Color Palette */
     :root {
       --color-bluish-1: #3165A4;
       --color-bluish-2: #2B5D98;
@@ -15,6 +15,7 @@
       --color-greyish-2: #838383;
       --color-greyish-3: #585858;
       --color-error-red: rgb(232, 17, 35);
+      --color-success-green: #28a745; /* Added success color */
       --color-light-gray: #ddd;
     }
 
@@ -44,7 +45,6 @@
       margin: 10px;
     }
 
-    /* GAP1: Adjust gap between logo.png and "Create Account" */
     .logo-box {
       padding: 15px;
       display: flex;
@@ -53,7 +53,7 @@
       background-color: white;
       border-bottom: 1px solid var(--color-greyish-2);
       border-radius: 0;
-      margin-bottom: -0px; /* GAP1 */
+      margin-bottom: -0px;
     }
 
     .form-and-text-box {
@@ -90,12 +90,10 @@
       text-align: left;
     }
 
-    /* GAP2: Adjust gap between "Create Account" and First Name/Last Name row */
     .login-form-box h1 {
-      margin-bottom: 25px; /* GAP2 */
+      margin-bottom: 25px;
     }
 
-    /* New: Container for First Name and Last Name on the same row */
     .name-row {
       display: flex;
       gap: 4px;
@@ -131,7 +129,6 @@
       font-size: 1.1rem;
     }
 
-    /* Set placeholder font to Arial */
     input::placeholder {
       font-family: Arial, sans-serif;
       font-size: 1.07rem;
@@ -158,11 +155,9 @@
       display: flex;
       gap: 10px;
       justify-content: stretch;
-      /* GAP3: Adjust gap between "Confirm Password:" and buttons */
-      margin-top: 50px; /* GAP3 */
+      margin-top: 50px;
     }
 
-    /* Updated button styles matching index.html */
     .login-form-box button[type="submit"].login-button,
     .login-form-box button[type="button"].signup-button {
       padding: 14px 0;
@@ -183,15 +178,22 @@
       border: none;
     }
 
-    .login-form-box button[type="submit"].login-button:hover {
+    .login-form-box button[type="submit"].login-button:hover:not(:disabled) { /* Add :not(:disabled) */
       background-color: #235385;
       transform: scale(1.00);
     }
 
-    .login-form-box button[type="submit"].login-button:active {
+    .login-form-box button[type="submit"].login-button:active:not(:disabled) { /* Add :not(:disabled) */
       background-color: #1f4c7a;
       transform: scale(0.98);
     }
+     /* Style for disabled button */
+    .login-form-box button[type="submit"].login-button:disabled {
+        background-color: var(--color-greyish-2);
+        cursor: not-allowed;
+        opacity: 0.7;
+    }
+
 
     .login-form-box button[type="button"].signup-button {
       background-color: #ffffff;
@@ -211,17 +213,31 @@
       transform: scale(0.98);
     }
 
-    .error-message-custom {
+    /* General message style */
+    .message-custom {
       font-weight: 600;
-      font-family: "Segoe UI", -apple-system, "Helvetica Neue", "Lucida Grande", Roboto, Ebrima, "Nirmala UI", Gadugi, "Segoe Xbox Symbol", "Segoe UI Symbol", "Meiryo UI", "Khmer UI", Tunga, "Lao UI", Raavi, "Iskoola Pota", Latha, Leelawadee, "Microsoft YaHei UI", "Microsoft JhengHei UI", "Malgun Gothic", "Estrangelo Edessa", "Microsoft Himalaya", "Microsoft New Tai Lue", "Microsoft PhagsPa", "Microsoft Tai Le", "Microsoft Yi Baiti", "Mongolian Baiti", "MV Boli", "Myanmar Text", "Cambria Math", sans-serif;
+      font-family: "Segoe UI", sans-serif;
       font-size: 0.9375rem;
       line-height: 1.25rem;
       box-sizing: border-box;
-      color: var(--color-error-red);
       margin: 0;
-      margin-bottom: 5px;
+      margin-bottom: 15px; /* Add space below message */
       text-align: left;
-      display: none;
+      display: none; /* Hidden by default */
+      padding: 10px;
+      border-radius: 4px;
+    }
+    /* Error specific */
+    .error-message-custom {
+      color: var(--color-error-red);
+      background-color: #f8d7da;
+      border: 1px solid #f5c6cb;
+    }
+    /* Success specific */
+     .success-message-custom {
+      color: #155724;
+      background-color: #d4edda;
+      border: 1px solid #c3e6cb;
     }
   </style>
 </head>
@@ -229,17 +245,19 @@
   <div class="big-box-container">
     <div class="logo-box">
       <div class="logo-container">
-        <img src="assets/logo.png" alt="Orb Connect Logo" class="login-logo">
+        <img src="assets/logo.png" alt="Orb Connect Logo" class="login-logo"> <!-- Assuming logo.png exists -->
       </div>
     </div>
 
     <div class="form-and-text-box">
       <div class="login-form-box">
-        <h1>Create Account</h1> <!-- GAP2: Gap between "Create Account" and next element -->
+        <h1>Create Account</h1>
 
-        <div class="error-message-custom" id="registration-error">Please fill in all required fields correctly.</div>
-        <form action="/register" method="post" id="registrationForm">
-          <!-- New Name row: First Name and Last Name on the same line -->
+        <!-- Message Area -->
+        <div class="message-custom error-message-custom" id="registration-error"></div>
+        <div class="message-custom success-message-custom" id="registration-success"></div>
+
+        <form id="registrationForm"> <!-- Removed action/method for JS handling -->
           <div class="name-row">
             <div class="name-input">
               <label for="firstName">First Name:</label>
@@ -247,7 +265,7 @@
             </div>
             <div class="name-input">
               <label for="lastName">Last Name:</label>
-              <input type="text" id="lastName" name="lastName" placeholder="Enter Last Name" required>
+              <input type="text" id="lastName" name="lastName" placeholder="Enter Last Name"> <!-- Made optional based on DB schema -->
             </div>
           </div>
 
@@ -263,9 +281,8 @@
           <label for="confirmPassword">Confirm Password:</label>
           <input type="password" id="confirmPassword" name="confirmPassword" placeholder="Confirm Password" required>
 
-          <!-- GAP3: Gap between "Confirm Password:" and button container is controlled by margin-top in .button-container -->
           <div class="button-container">
-            <button type="submit" class="login-button">Register</button>
+            <button type="submit" class="login-button" id="registerButton">Register</button>
             <button type="button" class="signup-button" id="cancelButton">Cancel</button>
           </div>
         </form>
@@ -274,33 +291,104 @@
   </div>
 
   <script>
-    document.getElementById('registrationForm').addEventListener('submit', function(event) {
-      const firstNameInput = document.getElementById('firstName');
-      const lastNameInput = document.getElementById('lastName');
-      const emailInput = document.getElementById('email');
-      const usernameInput = document.getElementById('username');
-      const passwordInput = document.getElementById('password');
-      const confirmPasswordInput = document.getElementById('confirmPassword');
-      const registrationError = document.getElementById('registration-error');
+    // Get references to form elements
+    const registrationForm = document.getElementById('registrationForm');
+    const passwordInput = document.getElementById('password');
+    const confirmPasswordInput = document.getElementById('confirmPassword');
+    const registrationError = document.getElementById('registration-error');
+    const registrationSuccess = document.getElementById('registration-success');
+    const registerButton = document.getElementById('registerButton');
+    const cancelButton = document.getElementById('cancelButton');
 
-      if (
-        !firstNameInput.value.trim() ||
-        !lastNameInput.value.trim() ||
-        !emailInput.value.trim() ||
-        !usernameInput.value.trim() ||
-        !passwordInput.value.trim() ||
-        !confirmPasswordInput.value.trim()
-      ) {
-        event.preventDefault();
+    // --- Backend URL Configuration ---
+    // Uses your provided AWS Elastic IP and the standard FastAPI port
+    const backendUrl = 'http://13.41.23.132:8000';
+
+    // --- Form Submission Handler ---
+    registrationForm.addEventListener('submit', async function(event) {
+      event.preventDefault(); // Stop the default browser form submission
+
+      // 1. Clear previous messages
+      registrationError.textContent = '';
+      registrationError.style.display = 'none';
+      registrationSuccess.textContent = '';
+      registrationSuccess.style.display = 'none';
+
+      // 2. Frontend Validation
+      const password = passwordInput.value;
+      const confirmPassword = confirmPasswordInput.value;
+
+      if (password !== confirmPassword) {
+        registrationError.textContent = 'Passwords do not match.';
         registrationError.style.display = 'block';
-      } else {
-        registrationError.style.display = 'none';
+        confirmPasswordInput.focus(); // Focus on the field with the error
+        return; // Stop the submission
+      }
+
+      // Add more frontend validation if needed (e.g., password length)
+      if (password.length < 6) { // Example minimum length
+         registrationError.textContent = 'Password must be at least 6 characters long.';
+         registrationError.style.display = 'block';
+         passwordInput.focus();
+         return;
+      }
+
+
+      // 3. Disable button and show loading state
+      registerButton.disabled = true;
+      registerButton.textContent = 'Registering...';
+
+      // 4. Prepare data from the form
+      const formData = new FormData(registrationForm);
+      const data = Object.fromEntries(formData.entries()); // Convert to a simple object
+      delete data.confirmPassword; // Remove confirmation password before sending
+
+      // 5. Send data to the FastAPI backend
+      try {
+        console.log(`Sending registration request to: ${backendUrl}/register`);
+        const response = await fetch(`${backendUrl}/register`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json', // Tell the server we're sending JSON
+          },
+          body: JSON.stringify(data), // Convert the data object to a JSON string
+        });
+
+        // Always try to parse the response as JSON, even for errors
+        const result = await response.json();
+        console.log('Received response status:', response.status);
+        console.log('Received response body:', result);
+
+        // 6. Handle the backend response
+        if (response.ok) { // Status code 2xx (e.g., 201 Created)
+          registrationSuccess.textContent = result.message || 'Registration successful! Redirecting...';
+          registrationSuccess.style.display = 'block';
+          registrationForm.reset(); // Clear form fields
+          // Redirect to login page after a delay
+          setTimeout(() => {
+            window.location.href = 'index.html'; // Redirect to your login page
+          }, 2500); // Wait 2.5 seconds
+        } else {
+          // Handle errors reported by the backend (e.g., 409 Conflict, 422 Unprocessable Entity)
+          // FastAPI often puts error details in result.detail
+          registrationError.textContent = result.detail || `Registration failed (Error: ${response.status})`;
+          registrationError.style.display = 'block';
+        }
+      } catch (error) {
+        // Handle network errors (server down, CORS issues, etc.)
+        console.error('Network or fetch error during registration:', error);
+        registrationError.textContent = 'Could not connect to the server. Please check your network or try again later.';
+        registrationError.style.display = 'block';
+      } finally {
+        // 7. Re-enable the button regardless of success or failure
+        registerButton.disabled = false;
+        registerButton.textContent = 'Register';
       }
     });
 
-    // Add event listener to the Cancel button
-    document.getElementById('cancelButton').addEventListener('click', function() {
-      // Redirect to index.html
+    // --- Cancel Button Handler ---
+    cancelButton.addEventListener('click', function() {
+      // Redirect back to the login page (index.html)
       window.location.href = 'index.html';
     });
   </script>
