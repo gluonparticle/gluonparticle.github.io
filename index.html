@@ -98,9 +98,8 @@
             display: block;
         }
 
-        /* Set input fields to full container width (aligned with buttons) */
         .login-form-box input[type="text"],
-        .login-form-box input[type="email"],
+        .login-form-box input[type="email"], /* Keep type="email" potentially useful */
         .login-form-box input[type="password"] {
             padding: 12px;
             margin-bottom: 10px;
@@ -111,48 +110,32 @@
             font-size: 1.1rem;
         }
 
-        /* Placeholder styles for Username input */
-        #username::placeholder {
-            font-family: Arial, sans-serif;
-            font-size: 1.05rem;
-            font-weight: 400;
-        }
-        #username::-webkit-input-placeholder {
-            font-family: Arial, sans-serif;
-            font-size: 1.05rem;
-            font-weight: 400;
-        }
-        #username:-ms-input-placeholder {
-            font-family: Arial, sans-serif;
-            font-size: 1.05rem;
-            font-weight: 400;
-        }
-
-        /* Placeholder styles for Password input */
+        /* Placeholder styles */
+        #username::placeholder,
         #password::placeholder {
             font-family: Arial, sans-serif;
             font-size: 1.05rem;
             font-weight: 400;
         }
+        #username::-webkit-input-placeholder,
         #password::-webkit-input-placeholder {
             font-family: Arial, sans-serif;
             font-size: 1.05rem;
             font-weight: 400;
         }
+        #username:-ms-input-placeholder,
         #password:-ms-input-placeholder {
             font-family: Arial, sans-serif;
             font-size: 1.05rem;
             font-weight: 400;
         }
 
-        /* Aligning button container to match input width */
         .login-form-box .button-container {
             display: flex;
             gap: 10px;
             margin-top: 10px;
         }
 
-        /* Button styles with flex so they span the full width as inputs */
         .login-form-box button[type="submit"].login-button,
         .login-form-box button[type="button"].signup-button {
             font-family: Arial, sans-serif;
@@ -163,27 +146,32 @@
             flex: 1;
             text-align: center;
             transition: all 0.3s ease;
+            padding: 10px 20px; /* Consistent padding */
         }
 
         .login-form-box button[type="submit"].login-button {
-            padding: 10px 20px;
             background-color: var(--color-bluish-3);
             color: white;
             border: none;
         }
 
-        .login-form-box button[type="submit"].login-button:hover {
+        .login-form-box button[type="submit"].login-button:hover:not(:disabled) {
             background-color: #235385;
             transform: scale(1);
         }
 
-        .login-form-box button[type="submit"].login-button:active {
+        .login-form-box button[type="submit"].login-button:active:not(:disabled) {
             background-color: #1f4c7a;
             transform: scale(0.98);
         }
+        /* Disabled style for login button */
+        .login-form-box button[type="submit"].login-button:disabled {
+            background-color: var(--color-greyish-2);
+            cursor: not-allowed;
+            opacity: 0.7;
+        }
 
         .login-form-box button[type="button"].signup-button {
-            padding: 13px 20px;
             background-color: #ffffff;
             color: #393194;
             border: 1px solid #838383;
@@ -201,7 +189,6 @@
             transform: scale(0.98);
         }
 
-        /* Adjust "Forgot your password?" color & redirect to password-reset.html */
         #forgot-password {
             color: #443ba6;
             font-size: 0.85em;
@@ -212,17 +199,25 @@
             margin-bottom: 30px;
         }
 
-        .error-message-custom {
-            font-weight: 400;
-            font-family: "Segoe UI", -apple-system, "Helvetica Neue", "Lucida Grande", Roboto, Ebrima, "Nirmala UI", Gadugi, "Segoe Xbox Symbol", "Segoe UI Symbol", "Meiryo UI", "Khmer UI", Tunga, "Lao UI", Raavi, "Iskoola Pota", Latha, Leelawadee, "Microsoft YaHei UI", "Microsoft JhengHei UI", "Malgun Gothic", "Estrangelo Edessa", "Microsoft Himalaya", "Microsoft New Tai Lue", "Microsoft PhagsPa", "Microsoft Tai Le", "Microsoft Yi Baiti", "Mongolian Baiti", "MV Boli", "Myanmar Text", "Cambria Math", sans-serif;
+        /* General message style for errors */
+        .message-custom {
+            font-weight: 600;
+            font-family: "Segoe UI", sans-serif;
             font-size: 0.9375rem;
             line-height: 1.25rem;
             box-sizing: border-box;
-            color: var(--color-error-red);
             margin: 0;
-            margin-bottom: 5px;
+            margin-bottom: 15px; /* Space below message */
             text-align: left;
-            display: none;
+            display: none; /* Hidden by default */
+            padding: 10px;
+            border-radius: 4px;
+        }
+        /* Error specific */
+        .error-message-custom {
+            color: var(--color-error-red);
+            background-color: #f8d7da;
+            border: 1px solid #f5c6cb;
         }
 
 
@@ -256,14 +251,17 @@
     <div class="big-box-container">
         <div class="logo-box">
             <div class="logo-container">
+                <!-- Ensure assets/logo2.png exists relative to where index.html is served -->
                 <img src="assets/logo2.png" alt="Orb Connect Logo" class="login-logo">
             </div>
         </div>
 
         <div class="form-and-text-box">
             <div class="login-form-box">
-                <div class="error-message-custom" id="username-error">Enter a valid email address, phone number, or Username</div>
-                <form action="/login" method="post" id="loginForm">
+                <!-- Message Area for Login Errors -->
+                <div class="message-custom error-message-custom" id="login-error"></div>
+
+                <form id="loginForm"> <!-- Removed action/method, added ID -->
                     <label for="username">Username or Email:</label>
                     <input type="text" id="username" name="username" placeholder="Enter Email or Username" required>
 
@@ -272,7 +270,8 @@
                     <a href="password-reset.html" id="forgot-password">Forgot your password?</a>
 
                     <div class="button-container">
-                        <button type="submit" class="login-button" onclick="window.location.href='remember-me.html';">Login</button>
+                        <button type="submit" class="login-button" id="loginButton">Login</button> <!-- Added ID -->
+                        <!-- Sign Up button still uses simple redirect -->
                         <button type="button" class="signup-button" onclick="window.location.href='registration.html';">Sign Up</button>
                     </div>
                 </form>
@@ -281,16 +280,103 @@
     </div>
 
     <script>
-        document.getElementById('loginForm').addEventListener('submit', function(event) {
-            const usernameInput = document.getElementById('username');
-            const usernameError = document.getElementById('username-error');
-            if (!usernameInput.value.trim()) {
-                event.preventDefault();
-                usernameError.style.display = 'block';
-            } else {
-                usernameError.style.display = 'none';
+        // Get references to form elements
+        const loginForm = document.getElementById('loginForm');
+        const usernameInput = document.getElementById('username');
+        const passwordInput = document.getElementById('password');
+        const loginError = document.getElementById('login-error');
+        const loginButton = document.getElementById('loginButton');
+
+        // --- Backend URL Configuration ---
+        // Set to your AWS EC2 Elastic IP and the port FastAPI is running on
+        const backendUrl = 'http://13.41.23.132:8000'; // <--- VERIFIED AWS IP
+
+        // --- Form Submission Handler ---
+        loginForm.addEventListener('submit', async function(event) {
+            event.preventDefault(); // Stop default form submission
+            console.log("Login form submitted.");
+
+            // 1. Clear previous errors
+            loginError.textContent = '';
+            loginError.style.display = 'none';
+
+            // 2. Basic Frontend Validation
+            if (!usernameInput.value.trim() || !passwordInput.value.trim()) {
+                console.log("Frontend validation failed: Fields empty.");
+                loginError.textContent = 'Please enter both username/email and password.';
+                loginError.style.display = 'block';
+                return;
+            }
+
+            // 3. Disable button and show loading state
+            loginButton.disabled = true;
+            loginButton.textContent = 'Logging In...';
+            console.log("Login button disabled.");
+
+            // 4. Prepare data for the backend
+            const data = {
+                username: usernameInput.value.trim(), // Use the value from the input field
+                password: passwordInput.value        // Use the value from the password field
+            };
+            console.log("Data prepared for login:", data);
+
+            // 5. Send data to the FastAPI backend /login endpoint
+            try {
+                console.log(`Attempting to fetch: ${backendUrl}/login`);
+                const response = await fetch(`${backendUrl}/login`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json', // We are sending JSON data
+                    },
+                    body: JSON.stringify(data), // Convert JS object to JSON string
+                });
+                console.log("Login fetch call completed.");
+
+                let result;
+                try {
+                    // Try to parse the response as JSON
+                    result = await response.json();
+                    console.log('Login response status:', response.status);
+                    console.log('Login response body:', result);
+                } catch (jsonError) {
+                    // If parsing fails, log the error and the raw text
+                    console.error("Failed to parse JSON login response:", jsonError);
+                    const textResponse = await response.text();
+                    console.error("Received non-JSON login response text:", textResponse);
+                    // Throw a new error to be caught by the outer catch block
+                    throw new Error(`Server returned non-JSON response (Status: ${response.status})`);
+                }
+
+                // 6. Handle the backend's response
+                if (response.ok) { // Check if status code is 2xx
+                    console.log("Login successful on backend.");
+                    // --- SUCCESS ---
+                    // TODO: In a real app, handle the session/token from the backend response
+                    // For now, just redirect to the dashboard
+                    window.location.href = 'dashboard.html'; // Redirect on successful login
+                } else {
+                    // --- FAILURE ---
+                    console.log("Login failed on backend. Status:", response.status);
+                    // Display the error message provided by FastAPI (in result.detail)
+                    loginError.textContent = result.detail || `Login failed (Error: ${response.status})`;
+                    loginError.style.display = 'block';
+                }
+
+            } catch (error) {
+                // Handle network errors (can't reach server, CORS if still an issue, etc.)
+                console.error('Network or fetch error during login:', error);
+                loginError.textContent = 'Could not connect to the login server. Please check your network or try again later.';
+                loginError.style.display = 'block';
+            } finally {
+                // 7. Re-enable the button regardless of the outcome
+                console.log("Executing finally block, re-enabling login button.");
+                loginButton.disabled = false;
+                loginButton.textContent = 'Login';
             }
         });
+
+        // The Sign Up button retains its simple redirect functionality via onclick attribute
+        // The Forgot Password link is a standard HTML link
     </script>
 </body>
 </html>

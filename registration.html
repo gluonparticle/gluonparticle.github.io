@@ -178,12 +178,12 @@
       border: none;
     }
 
-    .login-form-box button[type="submit"].login-button:hover:not(:disabled) { /* Add :not(:disabled) */
+    .login-form-box button[type="submit"].login-button:hover:not(:disabled) {
       background-color: #235385;
       transform: scale(1.00);
     }
 
-    .login-form-box button[type="submit"].login-button:active:not(:disabled) { /* Add :not(:disabled) */
+    .login-form-box button[type="submit"].login-button:active:not(:disabled) {
       background-color: #1f4c7a;
       transform: scale(0.98);
     }
@@ -245,7 +245,7 @@
   <div class="big-box-container">
     <div class="logo-box">
       <div class="logo-container">
-        <img src="assets/logo.png" alt="Orb Connect Logo" class="login-logo"> <!-- Assuming logo.png exists -->
+        <img src="assets/logo.png" alt="Orb Connect Logo" class="login-logo"> <!-- Ensure assets/logo.png exists -->
       </div>
     </div>
 
@@ -265,7 +265,7 @@
             </div>
             <div class="name-input">
               <label for="lastName">Last Name:</label>
-              <input type="text" id="lastName" name="lastName" placeholder="Enter Last Name"> <!-- Made optional based on DB schema -->
+              <input type="text" id="lastName" name="lastName" placeholder="Enter Last Name"> <!-- Made optional -->
             </div>
           </div>
 
@@ -301,12 +301,13 @@
     const cancelButton = document.getElementById('cancelButton');
 
     // --- Backend URL Configuration ---
-    // Uses your provided AWS Elastic IP and the standard FastAPI port
-    const backendUrl = 'http://13.41.23.132:8000';
+    // Set to your AWS EC2 Elastic IP and the port FastAPI is running on
+    const backendUrl = 'http://13.41.23.132:8000'; // <--- VERIFIED
 
     // --- Form Submission Handler ---
     registrationForm.addEventListener('submit', async function(event) {
       event.preventDefault(); // Stop the default browser form submission
+      console.log("Registration form submitted."); // DEBUG LOG
 
       // 1. Clear previous messages
       registrationError.textContent = '';
@@ -319,33 +320,36 @@
       const confirmPassword = confirmPasswordInput.value;
 
       if (password !== confirmPassword) {
+        console.log("Frontend Validation Failed: Passwords do not match."); // DEBUG LOG
         registrationError.textContent = 'Passwords do not match.';
         registrationError.style.display = 'block';
-        confirmPasswordInput.focus(); // Focus on the field with the error
+        confirmPasswordInput.focus();
         return; // Stop the submission
       }
 
       // Add more frontend validation if needed (e.g., password length)
       if (password.length < 6) { // Example minimum length
+         console.log("Frontend Validation Failed: Password too short."); // DEBUG LOG
          registrationError.textContent = 'Password must be at least 6 characters long.';
          registrationError.style.display = 'block';
          passwordInput.focus();
          return;
       }
 
-
       // 3. Disable button and show loading state
       registerButton.disabled = true;
       registerButton.textContent = 'Registering...';
+      console.log("Button disabled, text set to 'Registering...'"); // DEBUG LOG
 
       // 4. Prepare data from the form
       const formData = new FormData(registrationForm);
       const data = Object.fromEntries(formData.entries()); // Convert to a simple object
       delete data.confirmPassword; // Remove confirmation password before sending
+      console.log("Data prepared for sending:", data); // DEBUG LOG
 
       // 5. Send data to the FastAPI backend
       try {
-        console.log(`Sending registration request to: ${backendUrl}/register`);
+        console.log(`Attempting to fetch: ${backendUrl}/register`); // DEBUG LOG
         const response = await fetch(`${backendUrl}/register`, {
           method: 'POST',
           headers: {
@@ -353,34 +357,49 @@
           },
           body: JSON.stringify(data), // Convert the data object to a JSON string
         });
+        console.log("Fetch call completed."); // DEBUG LOG
 
         // Always try to parse the response as JSON, even for errors
-        const result = await response.json();
-        console.log('Received response status:', response.status);
-        console.log('Received response body:', result);
+        let result;
+        try {
+            result = await response.json();
+             console.log('Received response status:', response.status); // DEBUG LOG
+             console.log('Received response body:', result); // DEBUG LOG
+        } catch (jsonError) {
+             console.error("Failed to parse JSON response:", jsonError); // DEBUG LOG
+             // Handle cases where the response isn't valid JSON (e.g., server error HTML page)
+             const textResponse = await response.text(); // Try to get text instead
+             console.error("Received non-JSON response text:", textResponse); // DEBUG LOG
+             throw new Error(`Server returned non-JSON response (Status: ${response.status})`);
+        }
+
 
         // 6. Handle the backend response
         if (response.ok) { // Status code 2xx (e.g., 201 Created)
+          console.log("Registration successful on backend."); // DEBUG LOG
           registrationSuccess.textContent = result.message || 'Registration successful! Redirecting...';
           registrationSuccess.style.display = 'block';
           registrationForm.reset(); // Clear form fields
           // Redirect to login page after a delay
           setTimeout(() => {
+            console.log("Redirecting to index.html"); // DEBUG LOG
             window.location.href = 'index.html'; // Redirect to your login page
           }, 2500); // Wait 2.5 seconds
         } else {
           // Handle errors reported by the backend (e.g., 409 Conflict, 422 Unprocessable Entity)
+          console.log("Registration failed on backend. Status:", response.status); // DEBUG LOG
           // FastAPI often puts error details in result.detail
           registrationError.textContent = result.detail || `Registration failed (Error: ${response.status})`;
           registrationError.style.display = 'block';
         }
       } catch (error) {
         // Handle network errors (server down, CORS issues, etc.)
-        console.error('Network or fetch error during registration:', error);
-        registrationError.textContent = 'Could not connect to the server. Please check your network or try again later.';
+        console.error('Network or fetch error during registration:', error); // DEBUG LOG
+        registrationError.textContent = 'Could not connect to the registration server. Please check your network or try again later.';
         registrationError.style.display = 'block';
       } finally {
         // 7. Re-enable the button regardless of success or failure
+        console.log("Executing finally block, re-enabling button."); // DEBUG LOG
         registerButton.disabled = false;
         registerButton.textContent = 'Register';
       }
@@ -388,6 +407,7 @@
 
     // --- Cancel Button Handler ---
     cancelButton.addEventListener('click', function() {
+      console.log("Cancel button clicked, redirecting to index.html"); // DEBUG LOG
       // Redirect back to the login page (index.html)
       window.location.href = 'index.html';
     });
