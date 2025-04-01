@@ -288,8 +288,8 @@
         const loginButton = document.getElementById('loginButton');
 
         // --- Backend URL Configuration ---
-        // Set to your AWS EC2 Elastic IP and the port FastAPI is running on
-        const backendUrl = 'http://13.41.23.132'; // <--- VERIFIED AWS IP
+        // **** POINT THIS TO YOUR NGINX HTTPS ENDPOINT ****
+        const backendUrl = 'https://13.41.23.132'; // Port 443 is implied for HTTPS
 
         // --- Form Submission Handler ---
         loginForm.addEventListener('submit', async function(event) {
@@ -320,10 +320,10 @@
             };
             console.log("Data prepared for login:", data);
 
-            // 5. Send data to the FastAPI backend /login endpoint
+            // 5. Send data to the FastAPI backend /login endpoint VIA NGINX HTTPS
             try {
                 console.log(`Attempting to fetch: ${backendUrl}/login`);
-                const response = await fetch(`${backendUrl}/login`, {
+                const response = await fetch(`${backendUrl}/login`, { // Sending to HTTPS URL
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json', // We are sending JSON data
@@ -351,8 +351,7 @@
                 if (response.ok) { // Check if status code is 2xx
                     console.log("Login successful on backend.");
                     // --- SUCCESS ---
-                    // TODO: In a real app, handle the session/token from the backend response
-                    // For now, just redirect to the dashboard
+                    // Redirect to dashboard
                     window.location.href = 'dashboard.html'; // Redirect on successful login
                 } else {
                     // --- FAILURE ---
@@ -365,7 +364,12 @@
             } catch (error) {
                 // Handle network errors (can't reach server, CORS if still an issue, etc.)
                 console.error('Network or fetch error during login:', error);
-                loginError.textContent = 'Could not connect to the login server. Please check your network or try again later.';
+                 if (error instanceof TypeError && error.message.includes('fetch')) {
+                     // Specific message for potential SSL cert issues
+                     loginError.textContent = 'Network error or SSL certificate issue. Could not connect. Did you accept the self-signed certificate warning in another tab?';
+                 } else {
+                     loginError.textContent = 'Could not connect to the login server. Please check your network or try again later.';
+                 }
                 loginError.style.display = 'block';
             } finally {
                 // 7. Re-enable the button regardless of the outcome
