@@ -8,11 +8,14 @@
     <style>
         :root {
             --sidebar-width: 300px;
-            --sidebar-padding: 1.2rem;
+            --sidebar-padding: 1.2rem; /* This is 1.2rem on all sides */
             --master-margin: 0.55rem;
             --content-indent-percent: 3%;
-            --account-info-margin: var(--content_indent-percent);
-            --user-info-margin: var(--content_indent-percent);
+            /* Ensure --content_indent-percent is defined if used, or use --content-indent-percent */
+            /* --account-info-margin: var(--content_indent-percent); */ /* Typo in original _ vs - */
+            /* --user-info-margin: var(--content_indent-percent); */  /* Typo in original _ vs - */
+            --account-info-margin: var(--content-indent-percent);
+            --user-info-margin: var(--content-indent-percent);
             --chart-margin: 1.5rem;
             --color-bluish-1: #3165A4;
             --color-bluish-2: #265797;
@@ -33,23 +36,25 @@
             background-color: var(--color-greyish-1);
             color: var(--color-greyish-3);
             display: flex;
-            justify-content: flex-start;
-            align-items: flex-start;
-            min-height: 20vh;
-            overflow-x: hidden;
+            /* justify-content: flex-start; -- Not needed if sidebar has fixed width and content-area grows */
+            /* align-items: flex-start; -- Default is stretch, which is fine */
+            min-height: calc(100vh - 2 * var(--master-margin));
+            overflow-x: hidden; /* Good */
             box-sizing: border-box;
         }
 
         .sidebar {
             width: var(--sidebar-width);
-            padding: var(--sidebar-padding);
+            padding: var(--sidebar-padding); /* e.g. 1.2rem on all sides */
             background-color: #5d817e3e;
             border-radius: 0.5rem;
             height: calc(100vh - (2 * var(--master-margin)));
             display: flex;
             flex-direction: column;
-            box-sizing: border-box;
+            box-sizing: border-box; /* Sidebar width includes its padding */
             margin-right: var(--master-margin);
+            flex-shrink: 0; /* Prevent sidebar from shrinking */
+            overflow: hidden; /* Clip any visual overflow from children (like scaled items) */
         }
 
         .logo-container {
@@ -57,55 +62,81 @@
             align-items: center;
             justify-content: center;
             margin-bottom: 1.5rem;
+            /* Ensure logo doesn't cause overflow if it's too wide for the padded sidebar */
+            max-width: 100%; /* Max width of logo container is content width of sidebar */
         }
 
         .logo-container img {
-            max-width: 100%;
+            max-width: 100%; /* Image scales down if needed */
             height: auto;
         }
 
         .logo-divider {
             border-bottom: 2px solid var(--dark-brown);
             margin-bottom: 1.5rem;
-            width: 98%;
-            align-self: center;
+            width: 100%; /* Make divider span full width of its container (sidebar's content box) */
+            /* align-self: center; -- Not needed if width is 100% */
         }
 
         .nav-main, .nav-secondary {
             display: flex;
             flex-direction: column;
             gap: 0.8rem;
+            margin: 0; /* Explicitly remove margin */
+            padding: 0; /* Explicitly remove padding */
+            /* No width or box-sizing needed here; they will stretch to fill .sidebar's content box */
         }
 
         .nav-main {
-            margin-bottom: 29rem;
+            /* margin-bottom: 29rem; /* This was from your original, might be too large or inflexible */
+            margin-bottom: auto; /* Pushes .nav-secondary to the bottom if .sidebar is tall enough */
+            flex-grow: 1; /* Allows .nav-main to take up available space, pushing .nav-secondary down */
         }
+        /* If .nav-main should not grow, remove flex-grow and use a specific margin-bottom */
+        /* Example for fixed margin: */
+        /* .nav-main { margin-bottom: 2rem; } */
+
 
         .nav-link {
             text-decoration: none;
             font-family: 'Poppins', Arial, sans-serif;
             font-size: 1rem;
             font-weight: 400;
-            padding: 0.6rem 0.8rem;
+            padding: 0.6rem 0.8rem; /* Padding is inside the nav-link */
             border-radius: 4px;
             background-color: transparent;
             color: #360d6b;
-            transition: all 0.25s ease;
+            /* transition: all 0.25s ease; /* Be more specific for better performance */
+            transition: background-color 0.25s ease, color 0.25s ease, box-shadow 0.25s ease, transform 0.25s ease;
             display: flex;
             align-items: center;
             gap: 0.5rem;
             cursor: pointer;
+            border: none; /* From JS-fixed version */
+            /* REMOVE width: 100%; -- Let it stretch naturally as a block/flex item */
+            /* REMOVE box-sizing: border-box; -- Not strictly needed if no explicit width/height and padding is main concern */
+            text-align: left; /* From JS-fixed version */
+            margin: 0; /* Ensure no accidental margin on the link itself */
         }
 
         .nav-link:hover {
             background-color: #439ca298;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            transform: scale(1);
+            transform: scale(1); /* <<<< REVERT TO THIS from original working version */
         }
 
-        .nav-link:active {
+        /* For the selected state, use the .active class */
+        .nav-link.active { /* This rule was for the JS-driven active state */
             background-color: #346e73;
+            color: white; /* Text color for active state */
+            font-weight: 600;
+            /* transform: scale(1); /* Ensure no scale on active unless desired */
         }
+        /* Your original file had .nav-link:active for the mouse-down state. Keep if desired. */
+        .nav-link:active { /* For the brief moment the mouse button is held down */
+            background-color: #2a5a5e; /* Slightly darker than .active or hover for pressed state */
+        }
+
 
         .nav-link span {
             font-weight: 600;
@@ -128,19 +159,23 @@
             background-color: white;
             height: calc(100vh - (2 * var(--master-margin)));
             overflow-y: auto;
-            margin-left: 0;
-            margin-right: 0;
-            padding-left: calc(var(--content_indent-percent) + 20px);
+            /* margin-left: 0; -- Not needed if flexbox is used correctly on body */
+            /* margin-right: 0; */
+            /* padding-left: calc(var(--content_indent-percent) + 20px); */ /* Typo: --content_indent-percent */
+            padding-left: calc(var(--content-indent-percent) + 20px); /* Corrected variable name */
         }
 
         .menu-icon {
             display: none;
-            position: absolute;
-            top: var(--master-margin);
-            right: var(--master-margin);
+            position: fixed; /* Changed to fixed for better viewport relation */
+            top: calc(var(--master-margin) + 10px);
+            right: calc(var(--master-margin) + 10px);
             padding: 10px;
             cursor: pointer;
-            z-index: 10;
+            z-index: 1001; /* Above sidebar */
+            background-color: white;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
         }
 
         .menu-line {
@@ -150,164 +185,216 @@
             margin: 5px 0;
             transition: transform 0.3s ease, opacity 0.3s ease;
         }
+        body.sidebar-open .menu-icon .menu-line:nth-child(1) { transform: translateY(8px) rotate(45deg); }
+        body.sidebar-open .menu-icon .menu-line:nth-child(2) { opacity: 0; }
+        body.sidebar-open .menu-icon .menu-line:nth-child(3) { transform: translateY(-8px) rotate(-45deg); }
+
 
         @media (max-width: 768px), (orientation: portrait) {
             :root {
                 --master-margin: 0.6rem;
                 --sidebar-width: 250px;
-                --nav-main-margin-bottom: 3rem;
+                /* --nav-main-margin-bottom: 3rem; /* Replaced by flex-grow or auto margin */
             }
 
             body {
-                margin-left: 0;
-                margin-right: 0;
-                margin-top: 0;
-                margin-bottom: 0;
-                overflow-x: auto;
+                /* margin-left: 0; -- These are fine if you want edge-to-edge on mobile before sidebar slides */
+                /* margin-right: 0; */
+                /* margin-top: 0; */
+                /* margin-bottom: 0; */
+                overflow-x: auto; 
             }
 
             .sidebar {
                 position: fixed;
                 top: var(--master-margin);
-                left: var(--master-margin);
+                left: var(--master-margin); /* Or 0 if you want it to slide from edge */
                 height: calc(100vh - (2 * var(--master-margin)));
-                transform: translateX(-100%);
-                transition: transform 0.3s ease;
+                transform: translateX(calc(-100% - var(--master-margin))); /* Start fully off-screen including its own left margin relative to body's margin */
+                /* Or if left:0 for sidebar: transform: translateX(-100%); */
+                transition: transform 0.3s ease-in-out; /* Smoother transition */
+                z-index: 1000;
+                margin-right: 0; /* No right margin when fixed */
+            }
+            body.sidebar-open .sidebar {
+                transform: translateX(0);
             }
 
             .content-area {
-                border-radius: 0;
-                box-shadow: none;
-                margin-left: 0;
-                transition: transform 0.3s ease;
-                height: 100vh;
-                padding-left: 20px;
+                /* border-radius: 0; */
+                /* box-shadow: none; */
+                margin-left: 0; /* Content takes full width initially */
+                /* transition: transform 0.3s ease; /* Not needed if sidebar overlays */
+                /* height: 100vh; */
+                padding-left: 20px; /* Original padding */
             }
 
-            .logo-container {
-                margin-bottom: 1rem;
-            }
+            .logo-container { margin-bottom: 1rem; }
+            /* .nav-main { margin-bottom: 2rem; } /* Replaced by flex logic */
 
-            .nav-main {
-                margin-bottom: 2rem;
-            }
-
-            .menu-icon {
-                display: block;
-            }
+            .menu-icon { display: block; }
         }
 
-        .hidden {
-            display: none !important;
-        }
+        .hidden { display: none !important; }
     </style>
 </head>
 <body>
-    <div class="menu-icon" onclick="toggleSidebar()">
-        <div class="menu-line"></div>
-        <div class="menu-line"></div>
-        <div class="menu-line"></div>
-    </div>
+    <!-- ... (rest of HTML body and SCRIPT tag from previous correct JS version) ... -->
+    <!-- Ensure the SCRIPT tag is the one from my last response that fixed JS execution -->
 
-    <div class="sidebar">
+    <aside class="sidebar" id="sidebar"> <!-- Added ID to sidebar for easier selection -->
         <div class="logo-container">
             <img src="assets/logo2.png" alt="Logo">
         </div>
         <div class="logo-divider"></div>
         <nav class="nav-main">
-            <a href="#" data-content="overview" onclick="loadContent('overview')" class="nav-link active">
+            <!-- Removed inline onclick, will add listeners in JS -->
+            <a href="#" data-content="overview" class="nav-link"> <!-- Default active class removed, JS will handle it -->
                 <img src="assets/overview.png" alt="Overview Icon">
                 <span>Overview</span>
             </a>
-            <a href="#" data-content="billing" onclick="loadContent('billing')" class="nav-link">
+            <a href="#" data-content="billing" class="nav-link">
                 <img src="assets/bill.png" alt="Billing Icon">
                 <span>Billing</span>
             </a>
-            <a href="#" data-content="plans" onclick="loadContent('plans')" class="nav-link">
+            <a href="#" data-content="plans" class="nav-link">
                 <img src="assets/plan.png" alt="Plans Icon">
                 <span>Plans</span>
             </a>
-            <a href="#" data-content="ap" onclick="loadContent('ap')" class="nav-link">
+            <a href="#" data-content="ap" class="nav-link">
                 <img src="assets/AP.png" alt="Access Points Icon">
                 <span>Access Points</span>
             </a>
-
-            <a href="#" data-content="ap" onclick="loadContent('setup')" class="nav-link">
+            <a href="#" data-content="setup" class="nav-link"> <!-- data-content was "ap" in your original, changed to "setup" -->
                 <img src="assets/AP.png" alt="Setup">
                 <span>Setup</span>
             </a>
-
         </nav>
-
-
-   
-
         <nav class="nav-secondary">
-            <a href="#" data-content="Account-Settings" onclick="loadContent('Account-Settings')" class="nav-link">
+            <a href="#" data-content="Account-Settings" class="nav-link">
                 <img src="assets/settings.png" alt="Account Settings Icon">
                 <span>Account Settings</span>
             </a>
-            <a href="#" data-content="help" onclick="loadContent('help')" class="nav-link">
+            <a href="#" data-content="help" class="nav-link">
                 <img src="assets/help.png" alt="Help & Support Icon">
                 <span>Help & Support</span>
             </a>
         </nav>
- 
-    </div>
+    </aside>
 
-    <div class="content-area" id="content-area">
-        <!-- Content will be loaded here -->
-    </div>
+    <main class="content-area" id="content-area">
+        <p>Loading initial content...</p>
+    </main>
 
     <script>
-        function loadContent(contentId) {
-            let contentUrl = '';
-            switch (contentId) {
-                case 'Account-Settings':
-                    contentUrl = 'dashboard/Account-Settings.html';
-                    break;
-                case 'ap':
-                    contentUrl = 'content/1.html';
-                    break;
-                case 'help':
-                    contentUrl = 'content/help.html';
-                    break;
+        // PASTE THE SCRIPT FROM MY PREVIOUS RESPONSE THAT FIXED JS EXECUTION
+        // The one that starts with: document.addEventListener('DOMContentLoaded', () => { ...
+        // And has the robust loadContent function.
+        document.addEventListener('DOMContentLoaded', () => {
+            const contentArea = document.getElementById('content-area');
+            const sidebar = document.getElementById('sidebar');
+            let activeLinkElement = null;
 
-                case 'setup':
-                    contentUrl = 'guide.html';
-                    break;
+            const loadContent = (contentId, clickedLink) => {
+                console.log(`[Dashboard] Attempting to load content for: ${contentId}`);
+                let contentUrl = '';
+                switch (contentId) {
+                    case 'overview': contentUrl = 'content/4.html'; break;
+                    case 'billing': contentUrl = 'content/billing.html'; break; 
+                    case 'plans': contentUrl = 'content/plans.html'; break;     
+                    case 'Account-Settings': contentUrl = 'dashboard/Account-Settings.html'; break;
+                    case 'ap': contentUrl = 'content/1.html'; break;
+                    case 'help': contentUrl = 'content/help.html'; break;
+                    case 'setup': contentUrl = 'setup.html'; break; // Changed from setup.html to guide.html as per your last file
+                    default:
+                        console.warn(`[Dashboard] Unknown contentId: ${contentId}.`);
+                        contentArea.innerHTML = `<p>Content for '${contentId}' not found.</p>`;
+                        return;
+                }
 
+                fetch(contentUrl)
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error(`HTTP error! Status: ${response.status} for ${contentUrl}`);
+                        }
+                        return response.text();
+                    })
+                    .then(html => {
+                        contentArea.innerHTML = ''; 
+                        const tempDiv = document.createElement('div');
+                        tempDiv.innerHTML = html;
+                        const scriptElements = Array.from(tempDiv.querySelectorAll('script'));
+                        
+                        Array.from(tempDiv.childNodes).forEach(node => {
+                            if (node.nodeName.toUpperCase() !== 'SCRIPT') {
+                                contentArea.appendChild(node.cloneNode(true));
+                            }
+                        });
 
-                default:
-                    contentUrl = 'content/4.html';
-                    break;
+                        scriptElements.forEach(originalScript => {
+                            const newScript = document.createElement('script');
+                            Array.from(originalScript.attributes).forEach(attr => {
+                                newScript.setAttribute(attr.name, attr.value);
+                            });
+                            if (originalScript.src) {
+                                newScript.src = originalScript.src;
+                            } else {
+                                newScript.textContent = originalScript.textContent;
+                            }
+                            contentArea.appendChild(newScript);
+                            console.log(`[Dashboard] Processed and appended script from ${contentUrl}: ${originalScript.src || 'inline'}`);
+                        });
+
+                        if (activeLinkElement) {
+                            activeLinkElement.classList.remove('active');
+                        }
+                        if (clickedLink) {
+                            clickedLink.classList.add('active');
+                            activeLinkElement = clickedLink;
+                        }
+
+                        if (window.innerWidth <= 768 && document.body.classList.contains('sidebar-open')) {
+                            window.toggleSidebar(); 
+                        }
+                    })
+                    .catch(error => {
+                        console.error('[Dashboard] Error loading content:', error);
+                        contentArea.innerHTML = `<p>Error loading content for '${contentId}'. Path: ${contentUrl}. Details: ${error.message}</p>`;
+                    });
+            };
+
+            if (sidebar) {
+                const navLinks = sidebar.querySelectorAll('.nav-link');
+                navLinks.forEach(link => {
+                    link.addEventListener('click', function(event) {
+                        event.preventDefault(); 
+                        const contentId = this.dataset.content;
+                        if (contentId) {
+                            loadContent(contentId, this);
+                        }
+                    });
+                });
+            } else {
+                console.error("[Dashboard] Sidebar element not found.");
             }
             
-            fetch(contentUrl)
-                .then(response => response.text())
-                .then(data => {
-                    document.getElementById('content-area').innerHTML = data;
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                });
+            window.toggleSidebar = () => { 
+                document.body.classList.toggle('sidebar-open');
+            };
 
-            // Update active link
-            document.querySelectorAll('.nav-link').forEach(link => {
-                link.classList.remove('active');
-            });
-            event.target.classList.add('active');
-        }
-
-        function toggleSidebar() {
-            const body = document.body;
-            body.classList.toggle('sidebar-open');
-        }
-
-        // Load default content when the page loads
-        window.onload = function() {
-            loadContent('overview');
-        };
+            const defaultLinkElement = sidebar ? sidebar.querySelector('.nav-link[data-content="overview"]') : null;
+            if (defaultLinkElement) {
+                loadContent('overview', defaultLinkElement); // Pass element to set active
+            } else {
+                const firstLink = sidebar ? sidebar.querySelector('.nav-link') : null;
+                if (firstLink && firstLink.dataset.content) {
+                    loadContent(firstLink.dataset.content, firstLink);
+                } else {
+                    contentArea.innerHTML = "<p>Welcome! Please select an option.</p>";
+                }
+            }
+        });
     </script>
+
 </body>
 </html>

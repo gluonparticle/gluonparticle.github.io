@@ -1,284 +1,209 @@
-<!DOCTYPE html>
-<html>
-<head>
-<title>Router Setup Guide - Orb Connect</title>
+<!-- setup.html -->
 <style>
-    /* Import and Root Variables from Account Settings CSS */
-    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
-    :root {
-        --color-bluish-1: #3165A4;
-        --color-bluish-2: #265797;
-        --color-bluish-3: #3872B3;
-        --color-bluish-4: #437DBF;
-        --color-greyish-1: #f5f5f586;
-        --color-greyish-2: #838383;
-        --color-greyish-3: #585858;
-        --color-error-red: rgb(232, 17, 35);
-        --color-light-gray: #ddd;
-        --dark-brown: #543929;
-        --content-indent-percent: 3%;
-        --account-info-margin: var(--content-indent-percent);
+    /* Styles specific to the Setup Guide */
+    /* Remove :root variables if they are defined in dashboard.html's main CSS */
+    /* These styles will be injected along with the HTML. Scope them with a wrapper. */
+
+    .setup-guide-wrapper { /* NEW WRAPPER for scoping styles */
+        /* This wrapper itself should not have margins that conflict with dashboard.html's layout */
+        height: 100%; /* Allow it to fill the content-area height */
+        display: flex; /* To make .guide-container fill height if needed */
+        flex-direction: column;
     }
 
-body {
-    font-family: 'Poppins', Arial, sans-serif;
-    margin: 0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh;
-    background-color: var(--color-greyish-1); /* Using greyish background from Account Settings */
-    color: var(--color-greyish-3); /* Using greyish text color */
-    overflow: hidden;
-}
+    .setup-guide-wrapper .guide-container {
+        width: 100%;
+        max-width: 800px;
+        margin: 0 auto; /* Center the guide if max-width is applied */
+        /* min-height: calc(100% - 40px); -- Removed, let flex handle height */
+        flex-grow: 1; /* Allow guide-container to grow and fill space */
+        display: flex;
+        flex-direction: column;
+        background-color: white; /* Or transparent if dashboard's content-area provides bg */
+        /* padding: 20px; -- Padding is on .content-area or can be added here if specific */
+        box-sizing: border-box;
+        position: relative; /* For absolute positioning of buttons */
+        border-radius: 0;
+        overflow: hidden; /* Important for the inner scrolling content-area */
+    }
 
-.guide-container {
-    width: 55vw;
-    height: 87vh;
-    border: 1px solid rgb(0, 0, 0);
-    display: flex;
-    flex-direction: column;
-    background-color: white;
-    padding: 20px;
-    box-sizing: border-box;
-    position: relative;
-    border-radius: 2rem;
-    overflow: hidden;
-    margin-top: -2rem;
-}
+    .setup-guide-wrapper .setup-content-area { /* The scrollable part */
+        flex-grow: 1;
+        overflow-y: auto;
+        padding: 20px; /* Add padding here if needed for content inside scroll area */
+        padding-bottom: 100px; /* Space for fixed buttons */
+        position: relative;
+    }
 
-.content-area {
-    flex-grow: 1;
-    overflow-y: hidden; /* Removed vertical scrollbar */
-    padding-bottom: 8rem; /* Increased padding for buttons */
-    position: relative;
-}
+    .setup-guide-wrapper .page { display: none; width: 100%; }
+    .setup-guide-wrapper .page.active { display: block; }
 
-/* Page styles */
-.page {
-    display: none;
-    width: 100%;
-    height: 100%;
-}
-.page.active {
-    display: block;
-}
+    .setup-guide-wrapper h2 { /* General h2 for this component */
+        color: var(--color-bluish-2);
+        font-size: 2.5rem;
+        margin-bottom: 25px;
+        text-align: center;
+    }
+    .setup-guide-wrapper .welcome-title { font-size: 2.2em; margin-bottom: 20px; text-align: center; }
+    .setup-guide-wrapper .guide-text { font-size: 1.2em; line-height: 1.7; margin-top: 2rem; text-align: center; }
+    .setup-guide-wrapper .step-title { font-size: 1.8em; margin-top: 30px; margin-bottom: 20px; text-align: left; }
+    .setup-guide-wrapper .step-list { list-style-type: decimal; padding-left: 25px; }
+    .setup-guide-wrapper .step-list li { margin-bottom: 10px; font-size: 1.1em; line-height: 1.6; }
 
-/* Content Styling based on Account Settings */
-h2 {
-    margin-top: 2 rem;
-    color: var(--color-bluish-2);
-    font-size: 4rem;
-    margin-bottom: 25px;
-    text-align: center;
-}
+    .setup-guide-wrapper .button-container {
+        position: absolute;
+        bottom: 0; /* Stick to bottom of .guide-container */
+        left: 0;
+        right: 0;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 20px; /* Padding around buttons */
+        background-color: white;
+        border-top: 1px solid var(--color-light-gray);
+        box-sizing: border-box;
+        height: 80px; /* Fixed height for button container */
+    }
 
-.welcome-title {
-    font-size: 2.7em;
-    color: var(--color-bluish-2);
-    margin-bottom: 20px;
-}
+    /* ... (btn-arrow, skip-button styles prefixed with .setup-guide-wrapper) ... */
+    .setup-guide-wrapper .btn-arrow {
+        color: transparent; display: block; position: relative;
+        width: 4.5rem; height: 4.5rem; margin: 0;
+        background-color: white; transition: all 150ms ease-out;
+        border: none; padding: 0; cursor: pointer;
+    }
+    .setup-guide-wrapper .btn-arrow:hover::before,
+    .setup-guide-wrapper .btn-arrow:hover::after { background-color: #1b467e ; }
+    .setup-guide-wrapper .btn-arrow:active { transform: scale(1.1) rotate(var(--rotation, 0deg)); }
+    .setup-guide-wrapper .btn-arrow.btn-arrow-left:active { --rotation: -45deg; }
+    .setup-guide-wrapper .btn-arrow.btn-arrow-right:active { --rotation: 135deg; }
+    .setup-guide-wrapper .btn-arrow::before,
+    .setup-guide-wrapper .btn-arrow::after {
+        content: ""; display: block; position: absolute; top: 0; left: 0;
+        background-color: var(--color-bluish-3); transition: all 150ms ease-out;
+    }
+    .setup-guide-wrapper .btn-arrow::before { width: 75%; height: 25%; }
+    .setup-guide-wrapper .btn-arrow::after { width: 25%; height: 75%; }
+    .setup-guide-wrapper .btn-arrow.btn-arrow-left,
+    .setup-guide-wrapper .btn-arrow.btn-arrow-right { --arrow-offset: 12.5%; }
+    .setup-guide-wrapper .btn-arrow.btn-arrow-left::before,
+    .setup-guide-wrapper .btn-arrow.btn-arrow-left::after { top: var(--arrow-offset); left: var(--arrow-offset); }
+    .setup-guide-wrapper .btn-arrow.btn-arrow-right::before,
+    .setup-guide-wrapper .btn-arrow.btn-arrow-right::after { top: var(--arrow-offset); left: var(--arrow-offset); }
+    .setup-guide-wrapper .btn-arrow.btn-arrow-left { transform: rotate(-45deg); }
+    .setup-guide-wrapper .btn-arrow.btn-arrow-right { transform: rotate(135deg); }
+    .setup-guide-wrapper .btn-arrow:disabled { opacity: 0.3; cursor: not-allowed; }
+    .setup-guide-wrapper .btn-arrow:disabled:hover::before,
+    .setup-guide-wrapper .btn-arrow:disabled:hover::after { background-color: var(--color-bluish-3); }
+    .setup-guide-wrapper .skip-button {
+        background: none; border: none; color: rgb(153, 80, 80);
+        font-size: 1.1em; font-weight: 550; cursor: pointer;
+        padding: 10px 15px; border-radius: 4px; transition: background-color 0.2s ease;
+    }
+    .setup-guide-wrapper .skip-button:hover { background-color: rgba(153, 80, 80, 0.1); }
 
-.guide-text {
-    font-size: 1.4em;
-    color: var(--color-greyish-3);
-    line-height: 1.7;
-    margin-top: 4rem;
-}
-
-.step-title {
-    font-size: 2.2em;
-    color: var(--color-bluish-2);
-    margin-top: 30px;
-    margin-bottom: 20px;
-}
-
-.step-list {
-    list-style-type: decimal;
-    padding-left: 25px;
-}
-
-.step-list li {
-    margin-bottom: 10px;
-    font-size: 1.2em;
-    line-height: 1.6;
-}
-
-/* Redesigned Navigation Buttons - Arrow Buttons */
-.button-container {
-    position: absolute;
-    bottom: 20px;
-    left: 20px;
-    right: 20px;
-    display: flex;
-    justify-content: space-between; /* Keep space between buttons */
-    align-items: center;
-}
-
-.btn-arrow {
-    color: transparent;
-    display: block;
-    position: relative;
-    width: 6rem;
-    height: 6rem;
-    margin: 0; /* Reset margin for button container */
-    background-color: white;  /* Background matches page */
-    transition: all 150ms ease-out;
-    border: none; /* Remove default border */
-    padding: 0; /* Remove default padding */
-    cursor: pointer; /* Pointer cursor */
-}
-
-.btn-arrow:hover::before,
-.btn-arrow:hover::after {
-    background-color: #1b467e ;
-}
-
-.btn-arrow:active {
-    transform: scale(1.1); /* Grow a little on click */
-}
-
-.btn-arrow::before,
-.btn-arrow::after {
-    content: "";
-    display: block;
-    position: absolute;
-    top: 0;
-    left: 0;
-    background-color: var(--color-bluish-3); /* Original blue color for arrows */
-    transition: all 150ms ease-out;
-}
-
-.btn-arrow::before {
-    width: 75%;
-    height: 25%;
-}
-
-.btn-arrow::after {
-    width: 25%;
-    height: 75%;
-}
-
-.btn-arrow.btn-arrow-left,
-.btn-arrow.btn-arrow-right {
-    --arrow-offset: 12.5%;
-}
-.btn-arrow.btn-arrow-left::before,
-.btn-arrow.btn-arrow-left::after {
-    top: var(--arrow-offset);
-    left: var(--arrow-offset);
-}
-.btn-arrow.btn-arrow-right::before,
-.btn-arrow.btn-arrow-right::after {
-    top: var(--arrow-offset);
-    left: var(--arrow-offset);
-}
-
-.btn-arrow.btn-arrow-left {
-    transform: rotate(-45deg);
-}
-
-.btn-arrow.btn-arrow-right {
-    transform: rotate(135deg);
-}
-
-.btn-arrow:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
-}
-
-.skip-button {
-    background: none;
-    border: none;
-    color: rgb(153, 80, 80);
-    font-size: 1.1em;
-    font-weight: 550;
-    cursor: pointer;
-}
 </style>
-</head>
-<body>
 
-<div class="guide-container">
-  <div class="content-area">
-    <!-- Page 0: Welcome Page -->
-    <div class="page active" id="page-0" data-page="0">
-        <h2 class="welcome-title">Welcome to Orb Connect</h2>
-        <p class="guide-text">
-          This guide will help you through the steps of setting up your router in 3 easy steps!
-        </p>
+<div class="setup-guide-wrapper"> <!-- NEW WRAPPER for this whole component -->
+    <div class="guide-container">
+      <div class="setup-content-area"> <!-- This is the scrollable part -->
+        <!-- Page 0: Welcome Page -->
+        <div class="page active" id="page-0" data-page="0">
+            <h2 class="welcome-title">Welcome to Orb Connect</h2>
+            <p class="guide-text">
+              This guide will help you through the steps of setting up your router in 3 easy steps!
+            </p>
+        </div>
+        <!-- Page 1: Step 1 -->
+        <div class="page" id="page-1" data-page="1">
+            <h2 class="step-title">Step 1: Connecting to your router</h2>
+            <ul class="step-list">
+                <li>Open the box and plug in and turn on your router</li>
+                <li>Check the router's password mentioned below it</li>
+                <li>Connect to the router with the password provided on your phone/Mobile</li>
+            </ul>
+        </div>
+        <!-- Page 2: Step 2 -->
+        <div class="page" id="page-2" data-page="2">
+            <h2 class="step-title">Step 2: Access the router's Web Admin Interface</h2>
+            <ul class="step-list">
+                <li>Open any browser (Chrome/Firefox etc) on any device</li>
+                <li>Go to Advanced</li>
+                <li>Click the "Network" option</li>
+                <li>Select Dynamic DNS</li>
+            </ul>
+        </div>
+        <!-- Page 3: Step 3 -->
+        <div class="page" id="page-3" data-page="3">
+            <h2 class="step-title">Step 3: Configure the DDNS Settings</h2>
+            <ul class="step-list">
+                <li>Select the provider as no-ip.com</li>
+                <li>Enter the hostname as "orbconnect-ap0.zapto.org"</li>
+                <li>Use Username and Password: "john.doe@example.com" and "Y&8erdfjf834f"</li>
+                <li>Click save and restart the router</li>
+            </ul>
+        </div>
+      </div>
+
+      <div class="button-container">
+          <button id="prev-btn" class="btn-arrow btn-arrow-left" title="Previous" disabled></button>
+          <button id="skip-setup-btn" class.skip-button">Skip</button>
+          <button id="next-btn" class="btn-arrow btn-arrow-right" title="Next"></button>
+      </div>
     </div>
-
-    <!-- Page 1: Step 1 -->
-    <div class="page" id="page-1" data-page="1">
-        <h2 class="step-title">Step 1: Connecting to your router</h2>
-        <ul class="step-list">
-            <li>Open the box and plug in and turn on your router</li>
-            <li>Check the router's password mentioned below it</li>
-            <li>Connect to the router with the password provided on your phone/Mobile</li>
-        </ul>
-    </div>
-
-    <!-- Page 2: Step 2 -->
-    <div class="page" id="page-2" data-page="2">
-        <h2 class="step-title">Step 2: Access the router's Web Admin Interface</h2>
-        <ul class="step-list">
-            <li>Open any browser (Chrome/Firefox etc) on any device</li>
-            <li>Go to Advanced</li>
-            <li>Click the "Network" option</li>
-            <li>Select Dynamic DNS</li>
-        </ul>
-    </div>
-
-    <!-- Page 3: Step 3 -->
-    <div class="page" id="page-3" data-page="3">
-        <h2 class="step-title">Step 3: Configure the DDNS Settings</h2>
-        <ul class="step-list">
-            <li>Select the provider as no-ip.com</li>
-            <li>Enter the hostname as "orbconnect-ap0.zapto.org"</li>
-            <li>Use Username and Password: "john.doe@example.com" and "Y&8erdfjf834f"</li>
-            <li>Click save and restart the router</li>
-        </ul>
-    </div>
-  </div>
-
-  <div class="button-container">
-      <button id="prev-btn" class="btn-arrow btn-arrow-left" title="Previous" disabled></button>
-      <button class="skip-button">Skip</button>
-      <button id="next-btn" class="btn-arrow btn-arrow-right" title="Next"></button>
-  </div>
 </div>
 
 <script>
-const pages = document.querySelectorAll('.page');
-const prevBtn = document.getElementById('prev-btn');
-const nextBtn = document.getElementById('next-btn');
-let pageCounter = 0;
+(function() { // IIFE for a clean scope
+    const guideWrapper = document.querySelector('#content-area .setup-guide-wrapper');
 
-function updatePageDisplay() {
-  pages.forEach(page => page.classList.remove('active'));
-  document.getElementById(`page-${pageCounter}`).classList.add('active');
-  prevBtn.disabled = pageCounter === 0;
-  nextBtn.disabled = pageCounter === pages.length - 1;
-}
+    if (!guideWrapper) {
+        console.error("[Setup Script] CRITICAL: .setup-guide-wrapper not found within #content-area.");
+        return;
+    }
+    console.log("[Setup Script] Initializing for guideWrapper:", guideWrapper);
 
-nextBtn.addEventListener('click', () => {
-  if (pageCounter < pages.length - 1) {
-    pageCounter++;
+    // All queries are now relative to guideWrapper
+    const pages = guideWrapper.querySelectorAll('.page');
+    const prevBtn = guideWrapper.querySelector('#prev-btn');
+    const nextBtn = guideWrapper.querySelector('#next-btn');
+    const skipBtn = guideWrapper.querySelector('#skip-setup-btn');
+
+    if (pages.length === 0 || !prevBtn || !nextBtn) {
+        console.error("[Setup Script] Essential elements missing. Pages:", pages.length, "PrevBtn:", prevBtn, "NextBtn:", nextBtn);
+        return;
+    }
+
+    let pageCounter = 0;
+
+    function updatePageDisplay() { /* ... same as before ... */
+        if (pages.length === 0) return;
+        pages.forEach((page, index) => {
+            if (index === pageCounter) {
+                page.classList.add('active');
+            } else {
+                page.classList.remove('active');
+            }
+        });
+        if (prevBtn) prevBtn.disabled = (pageCounter === 0);
+        if (nextBtn) nextBtn.disabled = (pageCounter >= pages.length - 1);
+    }
+
+    const handleNextClick = () => { /* ... same as before ... */
+        if (pageCounter < pages.length - 1) { pageCounter++; updatePageDisplay(); }
+    };
+    const handlePrevClick = () => { /* ... same as before ... */
+        if (pageCounter > 0) { pageCounter--; updatePageDisplay(); }
+    };
+    const handleSkipClick = () => { /* ... same as before ... */
+        alert("Setup guide skipped.");
+    };
+
+    if (nextBtn) nextBtn.addEventListener('click', handleNextClick);
+    if (prevBtn) prevBtn.addEventListener('click', handlePrevClick);
+    if (skipBtn) skipBtn.addEventListener('click', handleSkipClick);
+    
     updatePageDisplay();
-  }
-});
-
-prevBtn.addEventListener('click', () => {
-  if (pageCounter > 0) {
-    pageCounter--;
-    updatePageDisplay();
-  }
-});
-
-// Initial display setup
-updatePageDisplay();
+    console.log("[Setup Script] Fully initialized for setup guide.");
+})();
 </script>
-
-</body>
-</html>

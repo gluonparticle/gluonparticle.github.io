@@ -1,144 +1,120 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Account Settings - Orb Connect</title>
-    <style>
-        /* Styles - Account Settings - Extracted from dashboard.html */
-        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
+<!-- dashboard/Account-Settings.html -->
+<style>
+    /* Styles specific to Account Settings content */
+    /* KEEP THE :root variables if they are ONLY used by this partial and not globally defined in dashboard.html */
+    /* However, it's better to define them once in dashboard.html's :root */
+    /* For simplicity here, I'll assume they are also in dashboard.html or not strictly needed if colors are inherited */
 
-        :root {
-            --color-bluish-1: #3165A4;
-            --color-bluish-2: #265797;
-            --color-bluish-3: #3872B3;
-            --color-bluish-4: #437DBF;
-            --color-greyish-1: #f5f5f586;
-            --color-greyish-2: #838383;
-            --color-greyish-3: #585858;
-            --color-error-red: rgb(232, 17, 35);
-            --color-light-gray: #ddd;
-            --dark-brown: #543929;
-            --content-indent-percent: 3%;
-            --account-info-margin: var(--content-indent-percent);
-        }
+    .account-settings-container .dashboard-section { /* Added a wrapper for better scoping */
+        /* padding: 20px; -- This padding is already on .content-area from dashboard.html */
+        border-radius: 8px; /* Can keep if you want inner radius */
+        margin-bottom: 20px;
+    }
 
-        body {
-            font-family: 'Poppins', Arial, sans-serif;
-            margin: 0.55rem;
-            padding: 0;
-            background-color: var(--color-greyish-1);
-            color: var(--color-greyish-3);
-        }
+    .account-settings-container .dashboard-section h2 {
+        color: var(--color-bluish-2); /* Assumes --color-bluish-2 is globally available */
+        margin-bottom: 25px;
+        font-size: 2.2em;
+        margin-left: 0;
+        text-align: left;
+    }
 
-        /* Dashboard Section Styles - MODIFIED - margin-left removed from h2 */
-        .dashboard-section {
-            padding: 20px;
-            border-radius: 8px;
-            margin-bottom: 20px;
-        }
+    .account-settings-container .login-form-box {
+        width: 100%;
+        text-align: left;
+        max-width: 700px;
+        /* margin-left: var(--account-info-margin); -- This should be handled by .content-area's padding-left if that's the intent */
+        /* Or, if this is an additional indent specific to this form: */
+        margin-left: var(--content-indent-percent); /* Assuming --content-indent-percent is global */
 
-        .dashboard-section h2 {
-            color: var(--color-bluish-2);
-            margin-bottom: 25px;
-            font-size: 2.2em; /* Adjusted font size to be bigger */
-            margin-left: 0; /* Removed margin-left from section heading */
-            text-align: left; /* Ensure left alignment of heading */
-        }
+    }
 
-        .hidden { display: none !important; }
+    .account-settings-container .login-form-box form {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        max-width: none;
+        margin: 0;
+        text-align: left;
+    }
 
-        /* Login Form Box Styles (for Account Settings) - MODIFIED - margin-left and max-width adjusted */
-        .login-form-box {
-            width: 100%;
-            text-align: left; /* Changed to left align text */
-            max-width: 700px; /* Increased max-width for form */
-            margin-left: var(--account-info-margin); /* Indent form using variable */
-        }
+    .account-settings-container .login-form-box h2 { /* This seems redundant with .dashboard-section h2 */
+        margin-bottom: 10px;
+        font-size: 2.2em;
+    }
 
+    .account-settings-container .name-row {
+        display: flex;
+        gap: 4px; /* Consider a rem/em value for gap */
+        justify-content: space-between;
+        width: 100%;
+    }
+     .account-settings-container .name-input {
+        flex: 1; /* Allows inputs to share space */
+    }
 
-        .login-form-box form {
-            display: flex;
-            flex-direction: column;
-            width: 100%;
-            max-width: none;
-            margin: 0; /* Reset form margins */
-            text-align: left;
-        }
+    .account-settings-container .login-form-box label {
+        margin-top: 9px;
+        margin-bottom: 6px;
+        font-weight: bold;
+        text-align: left;
+        display: block;
+    }
 
+    .account-settings-container .login-form-box input[type="text"],
+    .account-settings-container .login-form-box input[type="email"],
+    .account-settings-container .login-form-box input[type="password"] {
+        padding: 12px;
+        margin-bottom: 11px;
+        border: 1px solid var(--color-greyish-2); /* Assumes --color-greyish-2 is global */
+        border-radius: 4px;
+        width: 100%; /* Changed from calc(100% - 2px) as box-sizing handles padding */
+        box-sizing: border-box;
+        font-size: 1.1rem;
+    }
 
-        .login-form-box h2 {
-            margin-bottom: 10px;
-            font-size: 2.2em;
-        }
+    .account-settings-container .login-form-box .button-container {
+        display: flex;
+        gap: 10px;
+        justify-content: flex-start;
+        margin-top: 30px;
+        margin-left: 0;
+    }
 
+    .account-settings-container .login-form-box button[type="submit"].save-button,
+    .account-settings-container .login-form-box button[type="button"].cancel-button {
+        padding: 14px 0;
+        font-family: Arial, sans-serif; /* Poppins is already on body, consider consistency */
+        font-weight: 550;
+        font-size: 1.1em;
+        border-radius: 4px;
+        cursor: pointer;
+        width: 140px;
+        text-align: center;
+        display: inline-block;
+        transition: all 0.3s ease;
+    }
 
-        /* Name row container - UNCHANGED */
-        .name-row {
-            display: flex;
-            gap: 4px;
-            justify-content: space-between;
-            width: 100%;
-        }
+    .account-settings-container .login-form-box button[type="submit"].save-button {
+        background-color: var(--color-bluish-3); /* Assumes --color-bluish-3 is global */
+        color: white;
+        border: none;
+    }
 
-        .login-form-box label {
-            margin-top: 9px;
-            margin-bottom: 6px;
-            font-weight: bold;
-            text-align: left;
-            display: block;
-        }
+    .account-settings-container .login-form-box button[type="button"].cancel-button {
+        background-color: white;
+        color: #393194;
+        border: 1px solid var(--color-greyish-2); /* Assumes --color-greyish-2 is global */
+    }
+    .account-settings-container hr.section-divider { /* Style for the HR */
+        border: 0;
+        height: 1px;
+        background-color: var(--color-light-gray); /* Assumes var is global */
+        margin: 20px 0;
+    }
+</style>
 
-        .login-form-box input[type="text"],
-        .login-form-box input[type="email"],
-        .login-form-box input[type="password"] {
-            padding: 12px;
-            margin-bottom: 11px;
-            border: 1px solid var(--color-greyish-2);
-            border-radius: 4px;
-            width: calc(100% - 2px);
-            box-sizing: border-box;
-            font-size: 1.1rem;
-        }
-
-
-        .login-form-box .button-container {
-            display: flex;
-            gap: 10px;
-            justify-content: flex-start; /* Left align buttons */
-            margin-top: 30px; /* Reduced margin above buttons */
-            margin-left: 0; /* Reset button container margin-left */
-        }
-
-
-        /* Button styles - UNCHANGED */
-        .login-form-box button[type="submit"].save-button,
-        .login-form-box button[type="button"].cancel-button {
-            padding: 14px 0;
-            font-family: Arial, sans-serif;
-            font-weight: 550;
-            font-size: 1.1em;
-            border-radius: 4px;
-            cursor: pointer;
-            width: 140px; /* Fixed button width */
-            text-align: center;
-            display: inline-block;
-            transition: all 0.3s ease;
-        }
-
-        .login-form-box button[type="submit"].save-button {
-            background-color: var(--color-bluish-3);
-            color: white;
-            border: none;
-        }
-
-        .login-form-box button[type="button"].cancel-button {
-            background-color: white;
-            color: #393194;
-            border: 1px solid var(--color-greyish-2);
-        }
-    </style>
-</head>
-<body>
+<div class="account-settings-container"> <!-- Added a wrapper -->
     <div class="dashboard-section">
         <div class="login-form-box">
             <h2>Account Information</h2>
@@ -169,18 +145,28 @@
 
                 <div class="button-container">
                     <button type="submit" class="login-button save-button">Save</button>
-                    <button type="button" class="signup-button cancel-button" id="cancelButton">Cancel</button>
+                    <button type="button" class="signup-button cancel-button" id="cancelButtonAccountSettings">Cancel</button> <!-- Changed ID to be unique -->
                 </div>
             </form>
         </div>
     </div>
+</div>
 
-    <script>
-        // Add event listener to the Cancel button
-        document.getElementById('cancelButton').addEventListener('click', function() {
-            // Redirect to index.html
-            window.location.href = '../index.html'; // Adjusted path to go up one level to index.html
+<script>
+(function() { // IIFE for clean scope
+    console.log("[AccountSettings Script] Initializing...");
+    const cancelButton = document.getElementById('cancelButtonAccountSettings');
+    if (cancelButton) {
+        cancelButton.addEventListener('click', function() {
+            console.log("[AccountSettings Script] Cancel clicked.");
+            // Better to navigate via the main dashboard's loadContent if possible,
+            // or use a relative path carefully.
+            // window.location.href = '../index.html'; // This might break if dashboard structure changes
+            alert("Cancel clicked on Account Settings!"); // Placeholder
         });
-    </script>
-</body>
-</html>
+        console.log("[AccountSettings Script] Event listener added to cancel button.");
+    } else {
+        console.error("[AccountSettings Script] Cancel button not found.");
+    }
+})();
+</script>

@@ -1,7 +1,379 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Router Setup Guide - Orb Connect</title>
 <style>
-    /* Add any specific styles for help.html here */
+    /* Import and Root Variables from Account Settings CSS */
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
+    :root {
+        --color-bluish-1: #3165A4;
+        --color-bluish-2: #265797;
+        --color-bluish-3: #3872B3;
+        --color-bluish-4: #437DBF;
+        --color-greyish-1: #f5f5f586;
+        --color-greyish-2: #838383;
+        --color-greyish-3: #585858; /* Corrected from 585858 to #585858 */
+        --color-error-red: rgb(232, 17, 35);
+        --color-light-gray: #ddd;
+        --dark-brown: #543929;
+        --content-indent-percent: 3%;
+        --account-info-margin: var(--content-indent-percent);
+    }
+
+body {
+    font-family: 'Poppins', Arial, sans-serif;
+    margin: 0; /* Margin is handled by parent container in dashboard */
+    /* display: flex; */ /* Not needed if this is just content */
+    /* justify-content: center; */
+    /* align-items: center; */
+    /* min-height: 100vh; */ /* Height is controlled by .content-area */
+    background-color: transparent; /* Inherit from .content-area or set as needed */
+    color: var(--color-greyish-3);
+    /* overflow: hidden; */ /* Overflow is handled by .content-area */
+}
+
+.guide-container {
+    /* width: 55vw; -- Let it take width from content-area or set to 100% */
+    width: 100%;
+    max-width: 800px; /* Optional: constrain max width for very wide screens */
+    margin: 0 auto; /* Center if max-width is used */
+    /* height: 87vh; -- Height should be flexible based on content, or 100% of content-area if fixed */
+    min-height: calc(100% - 40px); /* Example to fill most of content-area, adjust padding */
+    /* border: 1px solid rgb(0, 0, 0); -- Removed, styling from dashboard is enough */
+    display: flex;
+    flex-direction: column;
+    background-color: white; /* Match dashboard content-area or keep transparent */
+    padding: 20px; /* Or remove if dashboard's content-area padding is sufficient */
+    box-sizing: border-box;
+    position: relative; /* For absolute positioning of buttons */
+    border-radius: 0; /* Or match dashboard's content-area radius if nested directly */
+    /* overflow: hidden; -- Handled by .content-area in guide-container */
+    /* margin-top: -2rem; -- Remove, layout within dashboard's flow */
+}
+
+.guide-container .content-area { /* Renamed to avoid conflict with dashboard's #content-area ID */
+    flex-grow: 1;
+    overflow-y: auto; /* Allow scroll if content exceeds fixed height */
+    padding-bottom: 100px; /* Space for buttons: 8rem ~ 128px, adjust as needed */
+    position: relative;
+}
+
+/* Page styles */
+.page {
+    display: none;
+    width: 100%;
+    /* height: 100%; -- Let height be natural or manage with flex */
+}
+.page.active {
+    display: block;
+}
+
+/* Content Styling based on Account Settings */
+h2 {
+    /* margin-top: 2rem; -- Adjusted from '2 rem' */
+    color: var(--color-bluish-2);
+    font-size: 2.5rem; /* Adjusted from 4rem for better fit */
+    margin-bottom: 25px;
+    text-align: center;
+}
+
+.welcome-title {
+    font-size: 2.2em; /* Adjusted from 2.7em */
+    color: var(--color-bluish-2);
+    margin-bottom: 20px;
+    text-align: center; /* Added for consistency */
+}
+
+.guide-text {
+    font-size: 1.2em; /* Adjusted from 1.4em */
+    color: var(--color-greyish-3);
+    line-height: 1.7;
+    margin-top: 2rem; /* Adjusted from 4rem */
+    text-align: center; /* Often good for welcome text */
+}
+
+.step-title {
+    font-size: 1.8em; /* Adjusted from 2.2em */
+    color: var(--color-bluish-2);
+    margin-top: 30px;
+    margin-bottom: 20px;
+    text-align: left; /* Steps are usually left-aligned */
+}
+
+.step-list {
+    list-style-type: decimal;
+    padding-left: 25px;
+}
+
+.step-list li {
+    margin-bottom: 10px;
+    font-size: 1.1em; /* Adjusted from 1.2em */
+    line-height: 1.6;
+}
+
+/* Redesigned Navigation Buttons - Arrow Buttons */
+.button-container {
+    position: absolute;
+    bottom: 20px;
+    left: 20px;
+    right: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 10px; /* Add some space above buttons */
+    background-color: white; /* Ensure buttons don't overlap text if content scrolls under them */
+    border-top: 1px solid var(--color-light-gray); /* Optional separator */
+}
+
+.btn-arrow {
+    color: transparent;
+    display: block;
+    position: relative;
+    width: 4.5rem; /* Adjusted from 6rem */
+    height: 4.5rem; /* Adjusted from 6rem */
+    margin: 0;
+    background-color: white;
+    transition: all 150ms ease-out;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+}
+
+.btn-arrow:hover::before,
+.btn-arrow:hover::after {
+    background-color: #1b467e ;
+}
+
+.btn-arrow:active {
+    transform: scale(1.1) rotate(var(--rotation, 0deg)); /* Maintain rotation on active */
+}
+.btn-arrow.btn-arrow-left:active { --rotation: -45deg; }
+.btn-arrow.btn-arrow-right:active { --rotation: 135deg; }
+
+
+.btn-arrow::before,
+.btn-arrow::after {
+    content: "";
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    background-color: var(--color-bluish-3);
+    transition: all 150ms ease-out;
+}
+
+.btn-arrow::before {
+    width: 75%;
+    height: 25%;
+}
+
+.btn-arrow::after {
+    width: 25%;
+    height: 75%;
+}
+
+.btn-arrow.btn-arrow-left,
+.btn-arrow.btn-arrow-right {
+    --arrow-offset: 12.5%;
+}
+.btn-arrow.btn-arrow-left::before,
+.btn-arrow.btn-arrow-left::after {
+    top: var(--arrow-offset);
+    left: var(--arrow-offset);
+}
+.btn-arrow.btn-arrow-right::before,
+.btn-arrow.btn-arrow-right::after {
+    top: var(--arrow-offset);
+    left: var(--arrow-offset);
+}
+
+.btn-arrow.btn-arrow-left {
+    transform: rotate(-45deg);
+}
+
+.btn-arrow.btn-arrow-right {
+    transform: rotate(135deg);
+}
+
+.btn-arrow:disabled {
+    opacity: 0.3; /* Made it more obvious when disabled */
+    cursor: not-allowed;
+}
+.btn-arrow:disabled:hover::before,
+.btn-arrow:disabled:hover::after {
+    background-color: var(--color-bluish-3); /* No color change on hover when disabled */
+}
+
+
+.skip-button {
+    background: none;
+    border: none;
+    color: rgb(153, 80, 80);
+    font-size: 1.1em;
+    font-weight: 550;
+    cursor: pointer;
+    padding: 10px 15px; /* Added padding for better click area */
+    border-radius: 4px;
+    transition: background-color 0.2s ease;
+}
+.skip-button:hover {
+    background-color: rgba(153, 80, 80, 0.1);
+}
 </style>
-<div id="help-content" class="dashboard-section">
-    <h2>Help & Support</h2>
-    <p>This is the Help & Support section content loaded dynamically.</p>
+</head>
+<body>
+
+<div class="guide-container">
+  <!-- IMPORTANT: Renamed this class to avoid conflict with the main dashboard's #content-area ID -->
+  <div class="setup-content-area">
+    <!-- Page 0: Welcome Page -->
+    <div class="page active" id="page-0" data-page="0">
+        <h2 class="welcome-title">Welcome to Orb Connect</h2>
+        <p class="guide-text">
+          This guide will help you through the steps of setting up your router in 3 easy steps!
+        </p>
+    </div>
+
+    <!-- Page 1: Step 1 -->
+    <div class="page" id="page-1" data-page="1">
+        <h2 class="step-title">Step 1: Connecting to your router</h2>
+        <ul class="step-list">
+            <li>Open the box and plug in and turn on your router</li>
+            <li>Check the router's password mentioned below it</li>
+            <li>Connect to the router with the password provided on your phone/Mobile</li>
+        </ul>
+    </div>
+
+    <!-- Page 2: Step 2 -->
+    <div class="page" id="page-2" data-page="2">
+        <h2 class="step-title">Step 2: Access the router's Web Admin Interface</h2>
+        <ul class="step-list">
+            <li>Open any browser (Chrome/Firefox etc) on any device</li>
+            <li>Go to Advanced</li>
+            <li>Click the "Network" option</li>
+            <li>Select Dynamic DNS</li>
+        </ul>
+    </div>
+
+    <!-- Page 3: Step 3 -->
+    <div class="page" id="page-3" data-page="3">
+        <h2 class="step-title">Step 3: Configure the DDNS Settings</h2>
+        <ul class="step-list">
+            <li>Select the provider as no-ip.com</li>
+            <li>Enter the hostname as "orbconnect-ap0.zapto.org"</li>
+            <li>Use Username and Password: "john.doe@example.com" and "Y&8erdfjf834f"</li>
+            <li>Click save and restart the router</li>
+        </ul>
+    </div>
+  </div>
+
+  <div class="button-container">
+      <button id="prev-btn" class="btn-arrow btn-arrow-left" title="Previous" disabled></button>
+      <button id="skip-setup-btn" class="skip-button">Skip</button> <!-- Added ID for easier selection -->
+      <button id="next-btn" class="btn-arrow btn-arrow-right" title="Next"></button>
+  </div>
 </div>
+
+<!-- ... (head and style and HTML body of setup.html remains the same) ... -->
+<!-- ... (guide-container, setup-content-area, pages, button-container) ... -->
+
+<script>
+    (function() { // IIFE for a clean scope
+        // Use a more specific selector for the main container of this setup guide
+        // This assumes that when setup.html is loaded into dashboard's #content-area,
+        // the .guide-container is a direct child or easily findable.
+        const guideRootElement = document.querySelector('#content-area .guide-container');
+    
+        if (!guideRootElement) {
+            console.error("[Setup Script] CRITICAL: .guide-container not found within #content-area. Script cannot initialize. Current #content-area HTML:", document.getElementById('content-area').innerHTML);
+            return;
+        }
+        console.log("[Setup Script] Initializing for guideRootElement:", guideRootElement);
+    
+        const pages = guideRootElement.querySelectorAll('.page');
+        const prevBtn = guideRootElement.querySelector('#prev-btn');
+        const nextBtn = guideRootElement.querySelector('#next-btn');
+        const skipBtn = guideRootElement.querySelector('#skip-setup-btn'); // Assuming you added this ID
+    
+        if (pages.length === 0 || !prevBtn || !nextBtn) {
+            console.error("[Setup Script] Essential elements missing within .guide-container. Pages:", pages.length, "PrevBtn:", prevBtn, "NextBtn:", nextBtn);
+            // Log the HTML of the guideRootElement to see what's actually there
+            console.log("[Setup Script] HTML of guideRootElement:", guideRootElement.innerHTML);
+            return;
+        }
+        console.log(`[Setup Script] Elements successfully found. Pages: ${pages.length}, Prev: ${!!prevBtn}, Next: ${!!nextBtn}`);
+    
+        let pageCounter = 0;
+    
+        function updatePageDisplay() {
+            if (pages.length === 0) return;
+            pages.forEach((page, index) => {
+                if (index === pageCounter) {
+                    page.classList.add('active');
+                } else {
+                    page.classList.remove('active');
+                }
+            });
+            // Ensure buttons exist before trying to set 'disabled'
+            if (prevBtn) prevBtn.disabled = (pageCounter === 0);
+            if (nextBtn) nextBtn.disabled = (pageCounter >= pages.length - 1);
+            console.log(`[Setup Script] Page display updated. Current page index: ${pageCounter}`);
+        }
+    
+        // Define handlers *before* trying to remove/add them
+        const handleNextClick = () => {
+            console.log("[Setup Script] Next clicked. Current page (before):", pageCounter);
+            if (pageCounter < pages.length - 1) {
+                pageCounter++;
+                updatePageDisplay();
+            }
+            console.log("[Setup Script] Current page (after):", pageCounter);
+        };
+    
+        const handlePrevClick = () => {
+            console.log("[Setup Script] Prev clicked. Current page (before):", pageCounter);
+            if (pageCounter > 0) {
+                pageCounter--;
+                updatePageDisplay();
+            }
+            console.log("[Setup Script] Current page (after):", pageCounter);
+        };
+        
+        const handleSkipClick = () => {
+            console.log("[Setup Script] Skip clicked.");
+            alert("Setup guide skipped.");
+            // Optionally navigate away, e.g., by calling a global function if available
+            // if (window.loadContent) {
+            //     const overviewLink = document.querySelector('#sidebar .nav-link[data-content="overview"]');
+            //     if (overviewLink) window.loadContent('overview', overviewLink);
+            // }
+        };
+    
+        // Attach event listeners
+        // Since these elements are newly created/added to DOM each time setup.html is loaded,
+        // we don't strictly need to remove old listeners, but it doesn't hurt.
+        // However, the key is that nextBtn and prevBtn are fresh references to the new DOM elements.
+        if (nextBtn) {
+            // nextBtn.removeEventListener('click', handleNextClick); // Optional: defensive
+            nextBtn.addEventListener('click', handleNextClick);
+            console.log("[Setup Script] Added click listener to Next button:", nextBtn);
+        }
+        if (prevBtn) {
+            // prevBtn.removeEventListener('click', handlePrevClick); // Optional: defensive
+            prevBtn.addEventListener('click', handlePrevClick);
+            console.log("[Setup Script] Added click listener to Prev button:", prevBtn);
+        }
+        if (skipBtn) {
+            // skipBtn.removeEventListener('click', handleSkipClick); // Optional: defensive
+            skipBtn.addEventListener('click', handleSkipClick);
+            console.log("[Setup Script] Added click listener to Skip button:", skipBtn);
+        }
+        
+        updatePageDisplay(); // Initial setup
+        console.log("[Setup Script] Fully initialized. Page counter at:", pageCounter);
+    
+    })(); // End of IIFE
+    </script>
+
+</body>
+</html>
